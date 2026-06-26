@@ -321,7 +321,7 @@ def analyze_n_glycosylation(struct, radius=5.0):
         result[f"NGLY{i}_AbsSASA"] = site["abs_sasa"]
         result[f"NGLY{i}_BFactor"] = site["bfactor"]
 
-    return result
+    return n_glycosylation_candidates, result
     
 
 def analyze_asn_deamidation(struct, radius=5.0):
@@ -379,7 +379,7 @@ def analyze_asn_deamidation(struct, radius=5.0):
         result[f"ASN{i}_AbsSASA"] = site["abs_sasa"]
         result[f"ASN{i}_BFactor"] = site["bfactor"]
 
-    return result        
+    return asn_deamidation_candidates, result        
 
 
 def analyze_asp_isomerization(struct, radius=5.0):        # Some PTMs are best predicted by sequence, but this tool is intentionally structure-only.
@@ -437,7 +437,7 @@ def analyze_asp_isomerization(struct, radius=5.0):        # Some PTMs are best p
         result[f"ASP{i}_AbsSASA"] = site["abs_sasa"]
         result[f"ASP{i}_BFactor"] = site["bfactor"]
 
-    return result   
+    return asp_isomerization_candidates, result   
 
 
 def analyze_gln_deamidation(struct, radius=5.0):
@@ -493,7 +493,7 @@ def analyze_gln_deamidation(struct, radius=5.0):
         result[f"GLN{i}_AbsSASA"] = site["abs_sasa"]
         result[f"GLN{i}_BFactor"] = site["bfactor"]
 
-    return result   
+    return gln_deamidation_candidates, result   
 
 
 def analyze_met_oxidation(struct):
@@ -542,7 +542,7 @@ def analyze_met_oxidation(struct):
         result[f"MET{i}_AbsSASA"] = site["abs_sasa"]
         result[f"MET{i}_BFactor"] = site["bfactor"]
 
-    return result           
+    return met_oxidation_candidates, result           
 
 
 def analyze_his_oxidation(struct):
@@ -592,7 +592,7 @@ def analyze_his_oxidation(struct):
         result[f"HIS{i}_AbsSASA"] = site["abs_sasa"]
         result[f"HIS{i}_BFactor"] = site["bfactor"]
 
-    return result  
+    return his_oxidation_candidates, result  
 
 
 def analyze_trp_oxidation(struct):      # check if I need to calculate buried?
@@ -641,7 +641,7 @@ def analyze_trp_oxidation(struct):      # check if I need to calculate buried?
         result[f"TRP{i}_AbsSASA"] = site["abs_sasa"]
         result[f"TRP{i}_BFactor"] = site["bfactor"]
 
-    return result  
+    return trp_oxidation_candidates, result  
     
 
 def analyze_cys_oxidation(struct):
@@ -690,7 +690,7 @@ def analyze_cys_oxidation(struct):
         result[f"CYS_OX{i}_AbsSASA"] = site["abs_sasa"]
         result[f"CYS_OX{i}_BFactor"] = site["bfactor"]
 
-    return result          
+    return cys_oxidation_candidates, result          
 
 
 def analyze_free_cys(struct):
@@ -764,7 +764,7 @@ def analyze_free_cys(struct):
         result[f"Free_CYS{i}_AbsSASA"] = site["abs_sasa"]
         result[f"Free_CYS{i}_BFactor"] = site["bfactor"]
 
-    return result   
+    return free_cys_candidates, result   
 
 
 # --- MAIN PIPELINE ---
@@ -913,16 +913,16 @@ def run_structure_hotspots_and_ptm_analysis():
                     "Pct_Sheet": round(secondary_structure_percentages["beta_sheet"], 2),
                     "Pct_Coil": round(secondary_structure_percentages["coil"], 2),
 
-                    # Fab/Fv Level Hotspots and PTMs [ONLY USE 1 OF THESE]
-                    "N_Glycosylation": len(n_glycosylation_candidates),
-                    "ASN_Deamidation": len(asn_deamidation_candidates),
-                    "ASP_Isomerization": len(asp_isomerization_candidates),
-                    "GLN_Deamidation": len(gln_deamidation_candidates),
-                    "MET_Oxidation": len(met_oxidation_candidates),
-                    "HIS_Oxidation": len(his_oxidation_candidates),
-                    "TRP_Oxidation": len(trp_oxidation_candidates),
-                    "CYS_Oxidation": len(cys_oxidation_candidates),
-                    "Free_CYS": len(free_cys_candidates),
+                    # Fab/Fv Level Hotspots and PTMs
+                    "N_Glycosylation": analyze_n_glycosylation(struct),
+                    "ASN_Deamidation": analyze_asn_deamidation(struct),
+                    "ASP_Isomerization": analyze_asp_isomerization(struct),
+                    "GLN_Deamidation": analyze_gln_deamidation(struct),
+                    "MET_Oxidation": analyze_met_oxidation(struct),
+                    "HIS_Oxidation": analyze_his_oxidation(struct),
+                    "TRP_Oxidation": analyze_trp_oxidation(struct),
+                    "CYS_Oxidation": analyze_cys_oxidation(struct),
+                    "Free_CYS": analyze_free_cys(struct),
 
                     # Fab/Fv Level CDR-localized PTM counts
                     "CDR_N_Glycosylation": n_cdr_n_glyco,
