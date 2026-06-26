@@ -1,0 +1,9 @@
+__pycache__/
+.venv/
+*.tar.gz
+*.cif
+._*
+data/
+pyig_*
+.vscode/
+propermab/multispecific_antibodies/propermab/
