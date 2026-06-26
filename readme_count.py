@@ -21,7 +21,7 @@ EXCLUDE_FILES = {
     'google_colabfold_fabs_bispecific_mAbs_batch.py', 'google_colabfold_fabs_bispecific_mAbs_batchupdate.py',
     'google_colabfold_Fv_Bispecific_scFv_batch.py', 'google_colabfold_Fv_BiTE_batch.py',
     'google_colabfold_Fv_scFv_batch.py', 'google_colabfold_Fv_Bispecific_BiTE_batch.py',
-    'google_colabfold_Fv_Bispecific_DART_batch.py'
+    'google_colabfold_Fv_Bispecific_DART_batch.py', 
 }
 
 def update_readme_count():
