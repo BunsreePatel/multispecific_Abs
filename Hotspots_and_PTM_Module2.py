@@ -15,11 +15,11 @@ warnings.filterwarnings("ignore")
 
 # --- PATHS ---
 BASE_DIRS = [
-    Path("/home/bunsree/projects/rosalind-bioinformatics/multispecific_antibodies/scFv"),
-    Path("/home/bunsree/projects/rosalind-bioinformatics/multispecific_antibodies/Bispecific_scFv"),
-    Path("/home/bunsree/projects/rosalind-bioinformatics/multispecific_antibodies/BiTE (Bispecific T-Cell Engager)"),
-    Path("/home/bunsree/projects/rosalind-bioinformatics/multispecific_antibodies/Bispecific_mAb"),
-    Path("/home/bunsree/projects/rosalind-bioinformatics/multispecific_antibodies/Whole_mAb_all")
+    Path("/home/bunsree/projects/multispecific_Abs/scFv"),
+    Path("/home/bunsree/projects/multispecific_Abs/Bispecific_scFv"),
+    Path("/home/bunsree/projects/multispecific_Abs/BiTE (Bispecific T-Cell Engager)"),
+    Path("/home/bunsree/projects/multispecific_Abs/Bispecific_mAb"),
+    Path("/home/bunsree/projects/multispecific_Abs/Whole_mAb_all")
 ]
 
 MASTER_CSV = Path("/home/bunsree/projects/rosalind-bioinformatics/multispecific_antibodies/TheraSAbDab_SeqStruc_07Dec2025.csv")
@@ -854,26 +854,26 @@ def run_structure_hotspots_and_ptm_analysis():
                 secondary_structure_counts, secondary_structure_percentages = calculate_secondary_structure_features(struct, pdb_path)
 
                 # Fab/Fv Level metrics
-                n_glycosylation_candidates = analyze_n_glycosylation(struct)
-                asn_deamidation_candidates = analyze_asn_deamidation(struct)
-                asp_isomerization_candidates = analyze_asp_isomerization(struct)
-                gln_deamidation_candidates = analyze_gln_deamidation(struct)
-                met_oxidation_candidates  = analyze_met_oxidation(struct)
-                his_oxidation_candidates  = analyze_his_oxidation(struct)
-                trp_oxidation_candidates = analyze_trp_oxidation(struct)
-                cys_oxidation_candidates  = analyze_cys_oxidation(struct)
-                free_cys_candidates = analyze_free_cys(struct)
+                n_glyco_list, n_glyco_result   = analyze_n_glycosylation(struct)
+                asn_deam_list, asn_deam_result  = analyze_asn_deamidation(struct)
+                asp_iso_list, asp_iso_result   = analyze_asp_isomerization(struct)
+                gln_deam_list, gln_deam_result  = analyze_gln_deamidation(struct)
+                met_ox_list, met_ox_result    = analyze_met_oxidation(struct)
+                his_ox_list, his_ox_result    = analyze_his_oxidation(struct)
+                trp_ox_list, trp_ox_result    = analyze_trp_oxidation(struct)
+                cys_ox_list, cys_ox_result    = analyze_cys_oxidation(struct)
+                free_cys_list, free_cys_result  = analyze_free_cys(struct)
 
                 # Fab/Fv Level Count CDR-localized PTM sites
-                n_cdr_n_glyco = count_cdr_ptm_sites(n_glycosylation_candidates, struct)
-                n_cdr_asn_deam = count_cdr_ptm_sites(asn_deamidation_candidates, struct)
-                n_cdr_asp_iso = count_cdr_ptm_sites(asp_isomerization_candidates, struct)
-                n_cdr_gln_deam = count_cdr_ptm_sites(gln_deamidation_candidates, struct)
-                n_cdr_met_ox = count_cdr_ptm_sites(met_oxidation_candidates, struct)
-                n_cdr_his_ox = count_cdr_ptm_sites(his_oxidation_candidates, struct)
-                n_cdr_trp_ox = count_cdr_ptm_sites(trp_oxidation_candidates, struct)
-                n_cdr_cys_ox = count_cdr_ptm_sites(cys_oxidation_candidates, struct)       
-                n_cdr_free_cys = count_cdr_ptm_sites(free_cys_candidates, struct)
+                n_cdr_n_glyco = count_cdr_ptm_sites(n_glyco_list, struct)
+                n_cdr_asn_deam = count_cdr_ptm_sites(asn_deam_list, struct)
+                n_cdr_asp_iso = count_cdr_ptm_sites(asp_iso_list, struct)
+                n_cdr_gln_deam = count_cdr_ptm_sites(gln_deam_list, struct)
+                n_cdr_met_ox = count_cdr_ptm_sites(met_ox_list, struct)
+                n_cdr_his_ox = count_cdr_ptm_sites(his_ox_list, struct)
+                n_cdr_trp_ox = count_cdr_ptm_sites(trp_ox_list, struct)
+                n_cdr_cys_ox = count_cdr_ptm_sites(cys_ox_list, struct)
+                n_cdr_free_cys = count_cdr_ptm_sites(free_cys_list, struct)
                 
                 # Detect if Fab1/Fab2 explicitly present
                 suffix = ""
@@ -914,15 +914,15 @@ def run_structure_hotspots_and_ptm_analysis():
                     "Pct_Coil": round(secondary_structure_percentages["coil"], 2),
 
                     # Fab/Fv Level Hotspots and PTMs
-                    "N_Glycosylation": analyze_n_glycosylation(struct),
-                    "ASN_Deamidation": analyze_asn_deamidation(struct),
-                    "ASP_Isomerization": analyze_asp_isomerization(struct),
-                    "GLN_Deamidation": analyze_gln_deamidation(struct),
-                    "MET_Oxidation": analyze_met_oxidation(struct),
-                    "HIS_Oxidation": analyze_his_oxidation(struct),
-                    "TRP_Oxidation": analyze_trp_oxidation(struct),
-                    "CYS_Oxidation": analyze_cys_oxidation(struct),
-                    "Free_CYS": analyze_free_cys(struct),
+                    "N_Glycosylation_Count": n_glyco_result["N_Glycosylation_Count"],
+                    "ASN_Deamidation_Count": asn_deam_result["ASN_Deamidation_Count"],
+                    "ASP_Isomerization_Count": asp_iso_result["ASP_Isomerization_Count"],
+                    "GLN_Deamidation_Count":gln_deam_result["GLN_Isomerization_Count"],
+                    "MET_Oxidation_Count": met_ox_result["MET_Oxidation_Count"],
+                    "HIS_Oxidation_Count": his_ox_result["HIS_Oxidation_Count"],
+                    "TRP_Oxidation_Count": trp_ox_result["TRP_Oxidation_Count"],
+                    "CYS_Oxidation_Count": cys_ox_result["CYS_Oxidation_Count"],
+                    "Free_CYS_Count": free_cys_result["Free_CYS_Count"],
 
                     # Fab/Fv Level CDR-localized PTM counts
                     "CDR_N_Glycosylation": n_cdr_n_glyco,
@@ -938,15 +938,15 @@ def run_structure_hotspots_and_ptm_analysis():
                 }
 
                 # Hotspots and PTMS Structured Outputs
-                entry.update(analyze_n_glycosylation(struct))
-                entry.update(analyze_asn_deamidation(struct))
-                entry.update(analyze_asp_isomerization(struct))
-                entry.update(analyze_gln_deamidation(struct))
-                entry.update(analyze_met_oxidation(struct))
-                entry.update(analyze_his_oxidation(struct))
-                entry.update(analyze_trp_oxidation(struct))
-                entry.update(analyze_cys_oxidation(struct))
-                entry.update(analyze_free_cys(struct))
+                entry.update(n_glyco_result)
+                entry.update(asn_deam_result)
+                entry.update(asp_iso_result)
+                entry.update(gln_deam_result)
+                entry.update(met_ox_result)
+                entry.update(his_ox_result)
+                entry.update(trp_ox_result)
+                entry.update(cys_ox_result)
+                entry.update(free_cys_result)
                
                 # Append to master features                
                 master_features.append(entry)
