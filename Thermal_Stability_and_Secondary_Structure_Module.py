@@ -14,11 +14,11 @@ warnings.filterwarnings("ignore")
 
 # --- PATHS ---
 BASE_DIRS = [
-    Path("/home/bunsree/projects/rosalind-bioinformatics/multispecific_antibodies/scFv"),
-    Path("/home/bunsree/projects/rosalind-bioinformatics/multispecific_antibodies/Bispecific_scFv"),
-    Path("/home/bunsree/projects/rosalind-bioinformatics/multispecific_antibodies/BiTE (Bispecific T-Cell Engager)"),
-    Path("/home/bunsree/projects/rosalind-bioinformatics/multispecific_antibodies/Bispecific_mAb"),
-    Path("/home/bunsree/projects/rosalind-bioinformatics/multispecific_antibodies/Whole_mAb")
+    Path("/home/bunsree/projects/multispecific_Abs/scFv"),
+    Path("/home/bunsree/projects/multispecific_Abs/Bispecific_scFv"),
+    Path("/home/bunsree/projects/multispecific_Abs/BiTE (Bispecific T-Cell Engager)"),
+    Path("/home/bunsree/projects/multispecific_Abs/Bispecific_mAb"),
+    Path("/home/bunsree/projects/multispecific_Abs/Whole_mAb")
 ]
 
 MASTER_CSV = Path("/home/bunsree/projects/rosalind-bioinformatics/multispecific_antibodies/TheraSAbDab_SeqStruc_07Dec2025.csv")
