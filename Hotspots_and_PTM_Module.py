@@ -15,11 +15,11 @@ warnings.filterwarnings("ignore")
 
 # --- PATHS ---
 BASE_DIRS = [
-    Path("/home/bunsree/projects/rosalind-bioinformatics/multispecific_antibodies/scFv"),
-    Path("/home/bunsree/projects/rosalind-bioinformatics/multispecific_antibodies/Bispecific_scFv"),
-    Path("/home/bunsree/projects/rosalind-bioinformatics/multispecific_antibodies/BiTE (Bispecific T-Cell Engager)"),
-    Path("/home/bunsree/projects/rosalind-bioinformatics/multispecific_antibodies/Bispecific_mAb"),
-    Path("/home/bunsree/projects/rosalind-bioinformatics/multispecific_antibodies/Whole_mAb_all")
+    Path("/home/bunsree/projects/multispecific_Abs/scFv"),
+    Path("/home/bunsree/projects/multispecific_Abs/Bispecific_scFv"),
+    Path("/home/bunsree/projects/multispecific_Abs/BiTE (Bispecific T-Cell Engager)"),
+    Path("/home/bunsree/projects/multispecific_Abs/Bispecific_mAb"),
+    Path("/home/bunsree/projects/multispecific_Abs/Whole_mAb_all")
 ]
 
 MASTER_CSV = Path("/home/bunsree/projects/rosalind-bioinformatics/multispecific_antibodies/TheraSAbDab_SeqStruc_07Dec2025.csv")
@@ -304,8 +304,25 @@ def analyze_n_glycosylation(struct, radius=5.0):
                             "bfactor": np.mean([atom.get_bfactor() for atom in res_n.get_atoms()]),
                         })
                         break  # Only need one valid motif per ASN
-    return n_glycosylation_candidates
+    
+    result = {
+        "N_Glycosylation_Count": len(n_glycosylation_candidates)
+    }
 
+    for i, site in enumerate(n_glycosylation_candidates, start=1):
+        result[f"NGLY{i}_Chain"] = site["chain_id"]
+        result[f"NGLY{i}_ResName"] = site["resname"]
+        result[f"NGLY{i}_ResSeq"] = site["resseq"]
+        result[f"NGLY{i}_ICode"] = site["icode"]
+        result[f"NGLY{i}_X"] = site["coord"][0]
+        result[f"NGLY{i}_Y"] = site["coord"][1]
+        result[f"NGLY{i}_Z"] = site["coord"][2]
+        result[f"NGLY{i}_RelSASA"] = site["rel_sasa"]
+        result[f"NGLY{i}_AbsSASA"] = site["abs_sasa"]
+        result[f"NGLY{i}_BFactor"] = site["bfactor"]
+
+    return n_glycosylation_candidates, result
+    
 
 def analyze_asn_deamidation(struct, radius=5.0):
     """
@@ -345,7 +362,24 @@ def analyze_asn_deamidation(struct, radius=5.0):
                     "bfactor": np.mean([atom.get_bfactor() for atom in res_n.get_atoms()]),
                 })
                 break  # Only need one valid motif per ASN
-    return asn_deamidation_candidates
+    
+    result = {
+        "ASN_Deamidation_Count": len(asn_deamidation_candidates)
+    }
+
+    for i, site in enumerate(asn_deamidation_candidates, start=1):
+        result[f"ASN{i}_Chain"] = site["chain_id"]
+        result[f"ASN{i}_ResName"] = site["resname"]
+        result[f"ASN{i}_ResSeq"] = site["resseq"]
+        result[f"ASN{i}_ICode"] = site["icode"]
+        result[f"ASN{i}_X"] = site["coord"][0]
+        result[f"ASN{i}_Y"] = site["coord"][1]
+        result[f"ASN{i}_Z"] = site["coord"][2]
+        result[f"ASN{i}_RelSASA"] = site["rel_sasa"]
+        result[f"ASN{i}_AbsSASA"] = site["abs_sasa"]
+        result[f"ASN{i}_BFactor"] = site["bfactor"]
+
+    return asn_deamidation_candidates, result        
 
 
 def analyze_asp_isomerization(struct, radius=5.0):        # Some PTMs are best predicted by sequence, but this tool is intentionally structure-only.
@@ -386,7 +420,24 @@ def analyze_asp_isomerization(struct, radius=5.0):        # Some PTMs are best p
                     "bfactor": np.mean([atom.get_bfactor() for atom in res_d.get_atoms()]),
                 })
                 break  # Only need one valid motif per ASP
-    return asp_isomerization_candidates
+
+    result = {
+        "ASP_Isomerization_Count": len(asp_isomerization_candidates)
+    }
+
+    for i, site in enumerate(asp_isomerization_candidates, start=1):
+        result[f"ASP{i}_Chain"] = site["chain_id"]
+        result[f"ASP{i}_ResName"] = site["resname"]
+        result[f"ASP{i}_ResSeq"] = site["resseq"]
+        result[f"ASP{i}_ICode"] = site["icode"]
+        result[f"ASP{i}_X"] = site["coord"][0]
+        result[f"ASP{i}_Y"] = site["coord"][1]
+        result[f"ASP{i}_Z"] = site["coord"][2]
+        result[f"ASP{i}_RelSASA"] = site["rel_sasa"]
+        result[f"ASP{i}_AbsSASA"] = site["abs_sasa"]
+        result[f"ASP{i}_BFactor"] = site["bfactor"]
+
+    return asp_isomerization_candidates, result   
 
 
 def analyze_gln_deamidation(struct, radius=5.0):
@@ -425,7 +476,24 @@ def analyze_gln_deamidation(struct, radius=5.0):
                     "bfactor": np.mean([atom.get_bfactor() for atom in res_q.get_atoms()]),
                 })
                 break  # Only need one valid motif per GLN
-    return gln_deamidation_candidates
+    
+    result = {
+        "GLN_Isomerization_Count": len(gln_deamidation_candidates)
+    }
+
+    for i, site in enumerate(gln_deamidation_candidates, start=1):
+        result[f"GLN{i}_Chain"] = site["chain_id"]
+        result[f"GLN{i}_ResName"] = site["resname"]
+        result[f"GLN{i}_ResSeq"] = site["resseq"]
+        result[f"GLN{i}_ICode"] = site["icode"]
+        result[f"GLN{i}_X"] = site["coord"][0]
+        result[f"GLN{i}_Y"] = site["coord"][1]
+        result[f"GLN{i}_Z"] = site["coord"][2]
+        result[f"GLN{i}_RelSASA"] = site["rel_sasa"]
+        result[f"GLN{i}_AbsSASA"] = site["abs_sasa"]
+        result[f"GLN{i}_BFactor"] = site["bfactor"]
+
+    return gln_deamidation_candidates, result   
 
 
 def analyze_met_oxidation(struct):
@@ -457,7 +525,24 @@ def analyze_met_oxidation(struct):
                 "abs_sasa": abs_sasa,
                 "bfactor": np.mean([atom.get_bfactor() for atom in res.get_atoms()]),
             })
-    return met_oxidation_candidates
+
+    result = {
+        "MET_Oxidation_Count": len(met_oxidation_candidates)
+    }
+
+    for i, site in enumerate(met_oxidation_candidates, start=1):
+        result[f"MET{i}_Chain"] = site["chain_id"]
+        result[f"MET{i}_ResName"] = site["resname"]
+        result[f"MET{i}_ResSeq"] = site["resseq"]
+        result[f"MET{i}_ICode"] = site["icode"]
+        result[f"MET{i}_X"] = site["coord"][0]
+        result[f"MET{i}_Y"] = site["coord"][1]
+        result[f"MET{i}_Z"] = site["coord"][2]
+        result[f"MET{i}_RelSASA"] = site["rel_sasa"]
+        result[f"MET{i}_AbsSASA"] = site["abs_sasa"]
+        result[f"MET{i}_BFactor"] = site["bfactor"]
+
+    return met_oxidation_candidates, result           
 
 
 def analyze_his_oxidation(struct):
@@ -490,7 +575,24 @@ def analyze_his_oxidation(struct):
                 "abs_sasa": abs_sasa,
                 "bfactor": np.mean([atom.get_bfactor() for atom in res.get_atoms()]),
             })
-    return his_oxidation_candidates
+
+    result = {
+        "HIS_Oxidation_Count": len(his_oxidation_candidates)
+    }
+
+    for i, site in enumerate(his_oxidation_candidates, start=1):
+        result[f"HIS{i}_Chain"] = site["chain_id"]
+        result[f"HIS{i}_ResName"] = site["resname"]
+        result[f"HIS{i}_ResSeq"] = site["resseq"]
+        result[f"HIS{i}_ICode"] = site["icode"]
+        result[f"HIS{i}_X"] = site["coord"][0]
+        result[f"HIS{i}_Y"] = site["coord"][1]
+        result[f"HIS{i}_Z"] = site["coord"][2]
+        result[f"HIS{i}_RelSASA"] = site["rel_sasa"]
+        result[f"HIS{i}_AbsSASA"] = site["abs_sasa"]
+        result[f"HIS{i}_BFactor"] = site["bfactor"]
+
+    return his_oxidation_candidates, result  
 
 
 def analyze_trp_oxidation(struct):      # check if I need to calculate buried?
@@ -522,8 +624,25 @@ def analyze_trp_oxidation(struct):      # check if I need to calculate buried?
                 "abs_sasa": abs_sasa,
                 "bfactor": np.mean([atom.get_bfactor() for atom in res.get_atoms()]),
             })
-    return trp_oxidation_candidates
 
+    result = {
+        "TRP_Oxidation_Count": len(trp_oxidation_candidates)
+    }
+
+    for i, site in enumerate(trp_oxidation_candidates, start=1):
+        result[f"TRP{i}_Chain"] = site["chain_id"]
+        result[f"TRP{i}_ResName"] = site["resname"]
+        result[f"TRP{i}_ResSeq"] = site["resseq"]
+        result[f"TRP{i}_ICode"] = site["icode"]
+        result[f"TRP{i}_X"] = site["coord"][0]
+        result[f"TRP{i}_Y"] = site["coord"][1]
+        result[f"TRP{i}_Z"] = site["coord"][2]
+        result[f"TRP{i}_RelSASA"] = site["rel_sasa"]
+        result[f"TRP{i}_AbsSASA"] = site["abs_sasa"]
+        result[f"TRP{i}_BFactor"] = site["bfactor"]
+
+    return trp_oxidation_candidates, result  
+    
 
 def analyze_cys_oxidation(struct):
     """
@@ -554,7 +673,24 @@ def analyze_cys_oxidation(struct):
                     "abs_sasa": abs_sasa,
                     "bfactor": np.mean([atom.get_bfactor() for atom in res.get_atoms()]),
                 })
-    return cys_oxidation_candidates
+
+    result = {
+        "CYS_Oxidation_Count": len(cys_oxidation_candidates)
+    }
+
+    for i, site in enumerate(cys_oxidation_candidates, start=1):
+        result[f"CYS_OX{i}_Chain"] = site["chain_id"]
+        result[f"CYS_OX{i}_ResName"] = site["resname"]
+        result[f"CYS_OX{i}_ResSeq"] = site["resseq"]
+        result[f"CYS_OX{i}_ICode"] = site["icode"]
+        result[f"CYS_OX{i}_X"] = site["coord"][0]
+        result[f"CYS_OX{i}_Y"] = site["coord"][1]
+        result[f"CYS_OX{i}_Z"] = site["coord"][2]
+        result[f"CYS_OX{i}_RelSASA"] = site["rel_sasa"]
+        result[f"CYS_OX{i}_AbsSASA"] = site["abs_sasa"]
+        result[f"CYS_OX{i}_BFactor"] = site["bfactor"]
+
+    return cys_oxidation_candidates, result          
 
 
 def analyze_free_cys(struct):
@@ -611,7 +747,24 @@ def analyze_free_cys(struct):
                     "abs_sasa": abs_sasa,
                     "bfactor":  np.mean([atom.get_bfactor() for atom in res.get_atoms()]),
                 })
-    return free_cys_candidates
+
+    result = {
+        "Free_CYS_Count": len(free_cys_candidates)
+    }
+
+    for i, site in enumerate(free_cys_candidates, start=1):
+        result[f"Free_CYS{i}_Chain"] = site["chain_id"]
+        result[f"Free_CYS{i}_ResName"] = site["resname"]
+        result[f"Free_CYS{i}_ResSeq"] = site["resseq"]
+        result[f"Free_CYS{i}_ICode"] = site["icode"]
+        result[f"Free_CYS{i}_X"] = site["coord"][0]
+        result[f"Free_CYS{i}_Y"] = site["coord"][1]
+        result[f"Free_CYS{i}_Z"] = site["coord"][2]
+        result[f"Free_CYS{i}_RelSASA"] = site["rel_sasa"]
+        result[f"Free_CYS{i}_AbsSASA"] = site["abs_sasa"]
+        result[f"Free_CYS{i}_BFactor"] = site["bfactor"]
+
+    return free_cys_candidates, result   
 
 
 # --- MAIN PIPELINE ---
@@ -701,26 +854,26 @@ def run_structure_hotspots_and_ptm_analysis():
                 secondary_structure_counts, secondary_structure_percentages = calculate_secondary_structure_features(struct, pdb_path)
 
                 # Fab/Fv Level metrics
-                n_glycosylation_candidates = analyze_n_glycosylation(struct)
-                asn_deamidation_candidates = analyze_asn_deamidation(struct)
-                asp_isomerization_candidates = analyze_asp_isomerization(struct)
-                gln_deamidation_candidates = analyze_gln_deamidation(struct)
-                met_oxidation_candidates  = analyze_met_oxidation(struct)
-                his_oxidation_candidates  = analyze_his_oxidation(struct)
-                trp_oxidation_candidates = analyze_trp_oxidation(struct)
-                cys_oxidation_candidates  = analyze_cys_oxidation(struct)
-                free_cys_candidates = analyze_free_cys(struct)
+                n_glyco_list, n_glyco_result   = analyze_n_glycosylation(struct)
+                asn_deam_list, asn_deam_result  = analyze_asn_deamidation(struct)
+                asp_iso_list, asp_iso_result   = analyze_asp_isomerization(struct)
+                gln_deam_list, gln_deam_result  = analyze_gln_deamidation(struct)
+                met_ox_list, met_ox_result    = analyze_met_oxidation(struct)
+                his_ox_list, his_ox_result    = analyze_his_oxidation(struct)
+                trp_ox_list, trp_ox_result    = analyze_trp_oxidation(struct)
+                cys_ox_list, cys_ox_result    = analyze_cys_oxidation(struct)
+                free_cys_list, free_cys_result  = analyze_free_cys(struct)
 
                 # Fab/Fv Level Count CDR-localized PTM sites
-                n_cdr_n_glyco = count_cdr_ptm_sites(n_glycosylation_candidates, struct)
-                n_cdr_asn_deam = count_cdr_ptm_sites(asn_deamidation_candidates, struct)
-                n_cdr_asp_iso = count_cdr_ptm_sites(asp_isomerization_candidates, struct)
-                n_cdr_gln_deam = count_cdr_ptm_sites(gln_deamidation_candidates, struct)
-                n_cdr_met_ox = count_cdr_ptm_sites(met_oxidation_candidates, struct)
-                n_cdr_his_ox = count_cdr_ptm_sites(his_oxidation_candidates, struct)
-                n_cdr_trp_ox = count_cdr_ptm_sites(trp_oxidation_candidates, struct)
-                n_cdr_cys_ox = count_cdr_ptm_sites(cys_oxidation_candidates, struct)       
-                n_cdr_free_cys = count_cdr_ptm_sites(free_cys_candidates, struct)
+                n_cdr_n_glyco = count_cdr_ptm_sites(n_glyco_list, struct)
+                n_cdr_asn_deam = count_cdr_ptm_sites(asn_deam_list, struct)
+                n_cdr_asp_iso = count_cdr_ptm_sites(asp_iso_list, struct)
+                n_cdr_gln_deam = count_cdr_ptm_sites(gln_deam_list, struct)
+                n_cdr_met_ox = count_cdr_ptm_sites(met_ox_list, struct)
+                n_cdr_his_ox = count_cdr_ptm_sites(his_ox_list, struct)
+                n_cdr_trp_ox = count_cdr_ptm_sites(trp_ox_list, struct)
+                n_cdr_cys_ox = count_cdr_ptm_sites(cys_ox_list, struct)
+                n_cdr_free_cys = count_cdr_ptm_sites(free_cys_list, struct)
                 
                 # Detect if Fab1/Fab2 explicitly present
                 suffix = ""
@@ -760,27 +913,16 @@ def run_structure_hotspots_and_ptm_analysis():
                     "Pct_Sheet": round(secondary_structure_percentages["beta_sheet"], 2),
                     "Pct_Coil": round(secondary_structure_percentages["coil"], 2),
 
-                    # Fab/Fv Level Hotspots and PTMs [ONLY USE 1 OF THESE]
-                    "N_Glycosylation": analyze_n_glycosylation(struct),
-                    "ASN_Deamidation": analyze_asn_deamidation(struct),
-                    "ASP_Isomerization": analyze_asp_isomerization(struct),
-                    "GLN_Deamidation": analyze_gln_deamidation(struct),
-                    "MET_Oxidation": analyze_met_oxidation(struct),
-                    "HIS_Oxidation": analyze_his_oxidation(struct),
-                    "TRP_Oxidation": analyze_trp_oxidation(struct),
-                    "CYS_Oxidation": analyze_cys_oxidation(struct),
-                    "Free_CYS": analyze_free_cys(struct),
-
-                    # Fab/Fv Level Hotspots and PTMs [ONLY USE 1 OF THESE]
-                    "N_Glycosylation": len(n_glycosylation_candidates),
-                    "ASN_Deamidation": len(asn_deamidation_candidates),
-                    "ASP_Isomerization": len(asp_isomerization_candidates),
-                    "GLN_Deamidation": len(gln_deamidation_candidates),
-                    "MET_Oxidation": len(met_oxidation_candidates),
-                    "HIS_Oxidation": len(his_oxidation_candidates),
-                    "TRP_Oxidation": len(trp_oxidation_candidates),
-                    "CYS_Oxidation": len(cys_oxidation_candidates),
-                    "Free_CYS": len(free_cys_candidates),
+                    # Fab/Fv Level Hotspots and PTMs
+                    "N_Glycosylation_Count": n_glyco_result["N_Glycosylation_Count"],
+                    "ASN_Deamidation_Count": asn_deam_result["ASN_Deamidation_Count"],
+                    "ASP_Isomerization_Count": asp_iso_result["ASP_Isomerization_Count"],
+                    "GLN_Deamidation_Count":gln_deam_result["GLN_Isomerization_Count"],
+                    "MET_Oxidation_Count": met_ox_result["MET_Oxidation_Count"],
+                    "HIS_Oxidation_Count": his_ox_result["HIS_Oxidation_Count"],
+                    "TRP_Oxidation_Count": trp_ox_result["TRP_Oxidation_Count"],
+                    "CYS_Oxidation_Count": cys_ox_result["CYS_Oxidation_Count"],
+                    "Free_CYS_Count": free_cys_result["Free_CYS_Count"],
 
                     # Fab/Fv Level CDR-localized PTM counts
                     "CDR_N_Glycosylation": n_cdr_n_glyco,
@@ -794,6 +936,17 @@ def run_structure_hotspots_and_ptm_analysis():
                     "CDR_Free_CYS": n_cdr_free_cys,
 
                 }
+
+                # Hotspots and PTMS Structured Outputs
+                entry.update(n_glyco_result)
+                entry.update(asn_deam_result)
+                entry.update(asp_iso_result)
+                entry.update(gln_deam_result)
+                entry.update(met_ox_result)
+                entry.update(his_ox_result)
+                entry.update(trp_ox_result)
+                entry.update(cys_ox_result)
+                entry.update(free_cys_result)
                
                 # Append to master features                
                 master_features.append(entry)
