@@ -4,24 +4,8 @@ from datetime import datetime
 from collections import defaultdict
 
 EXCLUDE_FILES = {
-    'readme_count.py', 'sabdabconverter.py', 'selenium_antibody_scraper.py',
-    'thera_sabdab_scraper.py', 'validate_antibody_sequences.py', 'validation_report.csv',
-    'categorize_antibody_format.py', 'fix_sequences.py',
-    'therasabdab_analyze_formats.py', 'calculate_features.py',
-    'sequence_features.xlsx', 'ml_sasa_predictor.py',
-    'all_antibody_sasa_features.csv', 'ml_sasa_predictor_chains.py', 'all_antibody_sasa_chains.csv',
-    '3D_structure_builder.py', 'analyze_hotspots.py', 'aggregation_predictor.py', 'Aggregation_Risk_Report.xlsx',
-    'antibody_diagnostic_tool.py', 'Antibody_Comparison_Report_2025.xlsx', 'build_pnas_shadow.py',
-    'compare_hydrophobicity.py', 'developability_hotspots.xlsx', 'mAb_truth_engine',
-    'mAb_Truth_Engine_Master.xlsx', 'MISSING_ANTIBODIES_LOG.xlsx', 'pnas_validator.py',
-    'PNAS_VS_CALCULATIONS.xlsx', 'google_colabfold_fab_whole_mAb.py', 'google_colabfold_fab_whole_mAb_batch.py',
-    'google_colabfold_fab_whole_mAb_fastas.py', 'google_colabfold_fab_whole_mAb_test.py',
-    'google_colabfold_fab_whole_mAb2_batch.py', 'google_colabfold_fab_whole_mAb3_batch.py',
-    'google_colabfold_fab_whole_mAb4_batch.py', 'google_colabfold_fab_whole_mAb5_batch.py',
-    'google_colabfold_fabs_bispecific_mAbs_batch.py', 'google_colabfold_fabs_bispecific_mAbs_batchupdate.py',
-    'google_colabfold_Fv_Bispecific_scFv_batch.py', 'google_colabfold_Fv_BiTE_batch.py',
-    'google_colabfold_Fv_scFv_batch.py', 'google_colabfold_Fv_Bispecific_BiTE_batch.py',
-    'google_colabfold_Fv_Bispecific_DART_batch.py', 
+    'readme_count.py', 'sabdabconverter.py', 'Hotspots_and_PTM_Module.py',
+    
 }
 
 def update_readme_count():
@@ -35,13 +19,11 @@ def update_readme_count():
     # Antibody folders to scan
     antibody_folders = [
         
-        "Bispecific_DVD_IG",
         "Bispecific_mAb",
         "Bispecific_scFv",
-        "Bispecific_scFv_Crossover",
         "BiTE (Bispecific T-Cell Engager)",
         "scFv",
-        "Whole_mAb_all"
+        "Whole_mAb"
     ]
 
     # Track files by folder
