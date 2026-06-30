@@ -51,16 +51,14 @@ HOT SPOTS AND PTM SUSCEPTIBILITY FEATURES (3D-Dependent):
 
 4. SECONDARY STRUCTURE FEATURES (DSSP)
     - DSSP (Dictionary of Protein Secondary Structure) assigns secondary structure (helix, sheet, coil) to each residue using hydrogen-bond geometry and backbone dihedral angles.
-    - CDR "PROXY" using largest loops??
-    - B-Factors ??
+    - CDR "PROXY" uses the three longest contiguous DSSP loop/turn/bend stretches per chain and annotates as CDR_like_1/2/3, a structure-only proxy for true CDR loops since no sequence numbering scheme is used.
+    - B-Factors are computed as the mean B-factor across all atoms in a residue and stored with each PTM candidate.
     - Literature: Kabsch, W., & Sander, C. (1983). Dictionary of protein secondary structure: Pattern recognition of hydrogen-bonded and geometrical features. Biopolymers, 22(12), 2577-2637.
 
 5. HOTSPOT & PTM "MOTIFS"
-    - N-Glycosylation, ASN Deamidation, ASP Isomerization, GLN Deamidation
-    - Spatial Cutoffs:
-        R = 5.0 Å (SAP sidechain neighbor search radius)
-    - MET Oxidation, HIS Oxidation, TRP Oxidation, CYS Oxidation ??
-    - Free CYS??
+    - N-Glycosylation, ASN Deamidation, ASP Isomerization, GLN Deamidation candidate residues are identified using defined motifs based on 3D proximity, not sequence; Spatial Cutoff of R = 5.0 Å (sidechain neighbor search radius).
+    - MET Oxidation, HIS Oxidation, TRP Oxidation, CYS Oxidation surface-exposed residues are identified based on 3D proximity, not sequence; Spatial Cutoff of R = 5.0 Å (sidechain neighbor search radius).
+    - Free CYS residues are identified structurally as exposed unpaired cysteines (SG not within DISULFIDE_DIST of another SG).
     - Literature: 
 
 """
