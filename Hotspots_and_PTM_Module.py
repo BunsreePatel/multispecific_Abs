@@ -71,11 +71,7 @@ POSITIVE_RESIDUES = ['ARG', 'LYS', 'HIS']
 NEGATIVE_RESIDUES = ['ASP', 'GLU']
 
 # --- MODULE-SPECIFIC SCALES/THRESHOLDS (from literature) ---
-PATCH_SASA_THRESHOLD = 200.0  # Å²
-PATCH_RADIUS = 6.0  # Å - standard for spatial clustering, smoother patches
-MIN_PATCH_SIZE = 4  # residues
 SURFACE_EXPOSURE_THRESHOLD = 0.1 # balanced, higher threshold would be 0.2; also possible to make it 0 an remove as a factor
-
 DISULFIDE_DIST = 2.2   # Å SG–SG (literature has it ~ 2.05)
 
 MAX_ASA = residue_sasa_scales["Wilke"]
