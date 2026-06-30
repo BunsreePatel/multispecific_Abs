@@ -5,7 +5,7 @@ from collections import defaultdict
 
 EXCLUDE_FILES = {
     'readme_count.py', 'sabdabconverter.py', 'Hotspots_and_PTM_Module.py',
-    
+
 }
 
 def update_readme_count():
@@ -36,8 +36,8 @@ def update_readme_count():
             print(f" Folder not found, skipping: {folder}")
             continue
 
-        if folder == "Whole_mAb_all":
-            # Recursively count all .pdb files in Whole_mAb_all and its subfolders
+        if folder == "Whole_mAb":
+            # Recursively count all .pdb files in Whole_mAb and its subfolders
             for root, dirs, files in os.walk(folder_path):
                 for filename in files:
                     if filename.endswith(".pdb"):
