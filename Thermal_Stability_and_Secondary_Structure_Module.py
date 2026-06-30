@@ -2,15 +2,13 @@ import os
 import warnings
 import pandas as pd
 import numpy as np
-import math  # For mathematical operations like logarithms
-import scipy # For numerical computations (e.g., scipy.optimize.newton)
+import math
 from pathlib import Path
 from tqdm import tqdm
 from Bio.PDB import PDBParser, NeighborSearch
 from Bio.PDB.SASA import ShrakeRupley
 from Bio.PDB.DSSP import DSSP
 from Bio.Data.PDBData import residue_sasa_scales
-from scipy.optimize import brentq
 
 warnings.filterwarnings("ignore")
 
@@ -65,14 +63,13 @@ THERMAL STABILITY FEATURES (3D-Dependent):
         DELTAH_HBOND                = -1.0          # kcal/mol per backbone H-bond
         HYDRO_CP_ALPHA              = 0.00034       # kcal/(mol·K·Å²) (hydrophobic heat capacity coefficient)   (Streit, 2024)
         POLAR_CP_BETA               = -0.00012      # kcal/(mol·K·Å²) (polar heat capacity coefficient)         (Streit, 2024)
-        GAMMA_HYDROPHOBIC_ENERGY    = 0.025         # kcal/mol/Å²  (solvation coefficient)
-    
+        GAMMA_HYDROPHOBIC_ENERGY    = 0.025         # kcal/mol/Å²  (solvation coefficient) 
     - Literature: Pace, C. N., Grimsley, G. R., Thomson, J. A., et al. (1988). Conformational stability and activity of ribonuclease T1 with zero, one, and two intact disulfide bonds. The Journal of Biological Chemistry, 263(24), 11620-11625.
     - Literature: Wimley, W. C., Gawrisch, K., Creamer, T. P., et al. (1996). Direct measurement of salt-bridge solvation energies using a peptide model system: Implications for protein stability. Proceedings of the National Academy of Sciences USA, 93(8), 2985-2990.
     - Literature: Scholtz, J. M., Marqusee, S., Baldwin, R. L., et al. (1991). Calorimetric determination of the enthalpy change for the alpha-helix to coil transition of an alanine peptide in water. Proceedings of the National Academy of Sciences USA, 88(7), 2854-2858.
     - Literature: Streit, J. O., Bukvin, I. V., Chan, S. H. S., et al. (2024). The ribosome lowers the entropic penalty of protein folding. Nature, 633, 232-239.   
     - Literature:
-    
+
     - Entropy Constants:
         DELTAS_CONF_SIDECHAIN       = 1.0           # kcal/mol  PLACEHOLDER
         DELTAS_CONF_BACKBONE        = 1.0           # kcal/mol  PLACEHOLDER
@@ -89,15 +86,12 @@ THERMAL STABILITY FEATURES (3D-Dependent):
     - Assumption: N <-> U (two-state, cooperative unfolding)
     - Equation:
         ΔG_NU(T)                    = ΔH_REF + ΔCp_proxy*(T - T_REF) - T*[ΔS_REF + ΔCp_proxy*ln(T/T_REF)]
-
     - Terms:
         ΔG_NU(T):                   change in Gibbs free energy for unfolding       # kcal/mol
         ΔH_REF:                     enthalpy proxy at T_REF                         # kcal/mol
         ΔCp_proxy:                  heat-capacity proxy from ΔSASA                  # kcal/mol·K
         ΔS_REF:                     entropy proxy at T_REF                          # kcal/mol·K
-
         ΔG_NU_at_T_REF              = ΔH_REF - T_REF*ΔS_REF (optional but recommended as a QC/reference feature)
-
     - Two-state equilibrium:
         K_NU(T) = exp(-ΔG_NU(T)/(R*T))
         fraction_unfolded = K_NU/(1 + K_NU)
@@ -111,7 +105,6 @@ THERMAL STABILITY FEATURES (3D-Dependent):
 6. SECONDARY STRUCTURE FEATURES
     - DSSP (Dictionary of Protein Secondary Structure)
     - Literature: Kabsch, W., & Sander, C. (1983). Dictionary of protein secondary structure: Pattern recognition of hydrogen-bonded and geometrical features. Biopolymers, 22(12), 2577-2637.
-
 """
 
 # --- BIOPHYSICAL CONSTANTS AND SCALES ---
@@ -162,7 +155,6 @@ N_MASK_HEAVY = 10   # Chain A (heavy, CH1 C-terminus)
 N_MASK_LIGHT = 5    # Chain B (light, CL C-terminus)
 
 # --- THERMAL STABILITY HELPER FUNCTIONS ---
-
 def get_max_asa(resname):
     """Get max ASA for 3-letter residue code."""
     return MAX_ASA.get(resname.upper(), 1.0)
@@ -365,6 +357,7 @@ def count_chain_salt_bridges(chain):
     Positive: ARG (NH1, NH2), LYS (NZ - epsilon-amino group) acts as the cation.
     Negative: ASP (OD1, OD2 within the carboxylate group), GLU (OE1, OE2 within the carboxylate group) acts as the anion.
     """
+    
     chain_positive_residues = []
     chain_negative_residues = []
 
@@ -422,6 +415,7 @@ def count_hydrogen_bonds(struct):       # new, double check the angle in literat
     Returns:
     - count of hydrogen bonds (int)
     """
+    
     atoms = []
 
     for chain in struct[0]:
@@ -482,6 +476,7 @@ def count_chain_hydrogen_bonds(chain):       # new, double check the angle in li
     Criterion: donor-acceptor distance < HBOND_DIST (3.5 Å) and D-CA···A angle >= 120°.
     Donors and acceptors: backbone and sidechain N and O atoms.
     """
+    
     chain_atoms = []
 
     for res in chain.get_residues():
@@ -545,6 +540,7 @@ def calc_hydrophobic_sasa_folded(struct):
     Returns:
     - hydrophobic_sasa_folded in Å²
     """
+    
     residues = []
 
     for chain in struct[0]:
@@ -568,6 +564,7 @@ def calc_chain_hydrophobic_sasa_folded(chain):
     """
     Calculate total solvent-accessible surface area of hydrophobic residues (folded state) of a single chain.
     """
+    
     residues = []
 
     for res in chain.get_residues():
@@ -596,6 +593,7 @@ def calc_polar_sasa_folded(struct):
     Returns:
     - polar_sasa_folded in Å²
     """
+    
     residues = []
 
     for chain in struct[0]:
@@ -619,6 +617,7 @@ def calc_chain_polar_sasa_folded(chain):
     """
     Calculate total solvent-accessible surface area of polar residues (folded state) of a single chain.
     """
+    
     residues = []
 
     for res in chain.get_residues():
@@ -647,6 +646,7 @@ def calc_hydrophobic_sasa_unfolded(struct):
     Returns:
     - hydrophobic_sasa_unfolded in Å²
     """
+    
     residues = []
 
     for chain in struct[0]:
@@ -671,6 +671,7 @@ def calc_chain_hydrophobic_sasa_unfolded(chain):
     """
     Calculate total solvent-accessible surface area of hydrophobic residues (unfolded state) of a single chain.
     """
+    
     residues = []
 
     for res in chain.get_residues():
@@ -700,6 +701,7 @@ def calc_polar_sasa_unfolded(struct):
     Returns:
     - polar_sasa_unfolded in Å²
     """
+    
     residues = []
 
     for chain in struct[0]:
@@ -724,6 +726,7 @@ def calc_chain_polar_sasa_unfolded(chain):
     """
     Calculate total solvent-accessible surface area of polar residues (unfolded state) of a single chain.
     """
+    
     residues = []
 
     for res in chain.get_residues():
@@ -754,6 +757,7 @@ def calc_delta_H_REF(struct):
     Returns:
     - ΔH_REF in kcal/mol
     """
+    
     n_hbond      = count_hydrogen_bonds(struct)
     n_saltbridge = count_salt_bridges(struct)
     n_disulfide  = count_disulfide_bonds(struct)
@@ -773,6 +777,7 @@ def calc_chain_delta_H_REF(chain):
     Estimate ΔH_REF from discrete structural interactions.
     ΔH_total = N_HB x DELTAH_HBOND + N_SB x DELTAH_SALTBRIDGE + N_DS x DELTAH_DISULFIDE + GAMMA_HYDROPHOBIC_ENERGY x hydrophobic_sasa_folded
     """
+    
     n_chain_hbond      = count_chain_hydrogen_bonds(chain)
     n_chain_saltbridge = count_chain_salt_bridges(chain)
     n_chain_disulfide  = count_chain_disulfide_bonds(chain)
@@ -807,6 +812,7 @@ def calc_delta_Cp_proxy(struct):
     - hydrophobic_sasa_unfolded in Å²
     - polar_sasa_unfolded in Å²
     """
+    
     # Folded state SASA from pdb structure
     hydrophobic_sasa_folded = calc_hydrophobic_sasa_folded(struct)
     polar_sasa_folded = calc_polar_sasa_folded(struct)
@@ -844,6 +850,7 @@ def calc_chain_delta_Cp_proxy(chain):
     ΔSASA_hydrophobic = hydrophobic_sasa_unfolded - hydrophobic_sasa_folded
     ΔSASA_polar = polar_sasa_unfolded - polar_sasa_folded  
     """
+    
     # Folded state SASA from pdb structure
     chain_hydrophobic_sasa_folded = calc_chain_hydrophobic_sasa_folded(chain)
     chain_polar_sasa_folded = calc_chain_polar_sasa_folded(chain)
@@ -871,6 +878,7 @@ def calc_chain_delta_Cp_proxy(chain):
         chain_hydrophobic_sasa_unfolded,
         chain_polar_sasa_unfolded
     )
+
 
 def calc_delta_S_REF(struct):
     """
@@ -1020,8 +1028,8 @@ def calculate_tm_proxy(struct):
     - Tm proxy in Kelvin
     """
     
-    # Collect all standard residues from all chains
     residues = []
+
     for chain in struct[0]:
         for res in chain.get_residues():
             if res.id[0] != " ":
@@ -1058,7 +1066,6 @@ def calculate_chain_tm_proxy(chain):
     Tm_proxy is the T in [T_LOW, T_HIGH] that minimizes |ΔG_NU(T)|.
     """
     
-    # Collect all standard residues from all chains
     residues = []
     
     for res in chain.get_residues():
@@ -1083,14 +1090,13 @@ def calculate_t_onset_proxy(struct, fraction_unfolded=0.02):
     Approximates T where ΔG_NU(T) + RTln(K_NU) ≈ 0 by scanning T from T_LOW to T_HIGH
     and selecting the T with the smallest |ΔG_NU(T) + RT·ln(K_NU)|.
 
-    Q_U(T) = K_NU(T) / (1 + K_NU(T))         [extent of unfolding, from literature]
+    Q_U(T)              = K_NU(T) / (1 + K_NU(T)) # extent of unfolding, from literature
 
-    Rerrange:
-    Q_U · (1 + K_NU) = K_NU
-    Q_U + Q_U·K_NU = K_NU
-    Q_U = K_NU - Q_U·K_NU
-    Q_U = K_NU·(1 - Q_U)
-    K_NU = Q_U / (1 - Q_U)                   [rearranged; Q_U = fraction_unfolded at T_onset]
+    K_NU                = Q_U · (1 + K_NU)
+    K_NU                = Q_U + Q_U·K_NU
+    K_NU - Q_U·K_NU     = Q_U
+    K_NU·(1 - Q_U)      = Q_U
+    K_NU                = Q_U / (1 - Q_U) # rearranged; Q_U = fraction_unfolded at T_onset
 
     ΔG_NU(T) =  ΔH_REF + ΔCp(T - T_REF) - T[ΔS_REF + ΔCpln(T/T_REF)]
     0 = ΔH_REF + ΔCp(T - T_REF) - T[ΔS_REF + ΔCp·ln(T/T_REF)] + RT·ln(K_NU)
@@ -1106,8 +1112,8 @@ def calculate_t_onset_proxy(struct, fraction_unfolded=0.02):
     - T_onset proxy in Kelvin
     """
 
-    #Collect all standard residues from all chains
     residues = []
+    
     for chain in struct[0]:
         for res in chain.get_residues():
             if res.id[0] != " ":
@@ -1133,14 +1139,13 @@ def calculate_chain_t_onset_proxy(chain, fraction_unfolded=0.02):
     Approximates T where ΔG_NU(T) + RTln(K_NU) ≈ 0 by scanning T from T_LOW to T_HIGH
     and selecting the T with the smallest |ΔG_NU(T) + RT·ln(K_NU)|.
 
-    Q_U(T) = K_NU(T) / (1 + K_NU(T))         [extent of unfolding, from literature]
+    Q_U(T)              = K_NU(T) / (1 + K_NU(T)) # extent of unfolding, from literature
 
-    Rerrange:
-    Q_U · (1 + K_NU) = K_NU
-    Q_U + Q_U·K_NU = K_NU
-    Q_U = K_NU - Q_U·K_NU
-    Q_U = K_NU·(1 - Q_U)
-    K_NU = Q_U / (1 - Q_U)                   [rearranged; Q_U = fraction_unfolded at T_onset]
+    K_NU                = Q_U · (1 + K_NU)
+    K_NU                = Q_U + Q_U·K_NU
+    K_NU - Q_U·K_NU     = Q_U
+    K_NU·(1 - Q_U)      = Q_U
+    K_NU                = Q_U / (1 - Q_U) # rearranged; Q_U = fraction_unfolded at T_onset
 
     ΔG_NU(T) =  ΔH_REF + ΔCp(T - T_REF) - T[ΔS_REF + ΔCpln(T/T_REF)]
     0 = ΔH_REF + ΔCp(T - T_REF) - T[ΔS_REF + ΔCp·ln(T/T_REF)] + RT·ln(K_NU)
@@ -1149,7 +1154,6 @@ def calculate_chain_t_onset_proxy(chain, fraction_unfolded=0.02):
     T_onset is the T in [T_LOW, T_HIGH] that minimizes |ΔG_NU(T) + RT·ln(K_NU)|.
     """
 
-    #Collect all standard residues from all chains
     residues = []
     
     for res in chain.get_residues():
@@ -1187,6 +1191,7 @@ def calculate_secondary_structure_features(struct, pdb_path, dssp_executable="/h
     - secondary_structure_percentages: Dictionary with percentages of secondary structure elements.
       Example: {"alpha_helix": 45.0, "beta_sheet": 30.0, "coil": 25.0}
     """
+    
     print(f"Running DSSP on {pdb_path} with executable {dssp_executable}")
     
     # Run DSSP on the structure

@@ -51,16 +51,16 @@ HOT SPOTS AND PTM SUSCEPTIBILITY FEATURES (3D-Dependent):
 
 4. SECONDARY STRUCTURE FEATURES (DSSP)
     - DSSP (Dictionary of Protein Secondary Structure) assigns secondary structure (helix, sheet, coil) to each residue using hydrogen-bond geometry and backbone dihedral angles.
-    - CDR "PROXY" uses the three longest contiguous DSSP loop/turn/bend stretches per chain and annotates as CDR_like_1/2/3, a structure-only proxy for true CDR loops since no sequence numbering scheme is used.
+    - CDR-Proxy uses the three longest contiguous DSSP loop/turn/bend stretches per chain and annotates as CDR_like_1/2/3, a structure-only proxy for true CDR loops since no sequence numbering scheme is used.
     - B-Factors are computed as the mean B-factor across all atoms in a residue and stored with each PTM candidate.
     - Literature: Kabsch, W., & Sander, C. (1983). Dictionary of protein secondary structure: Pattern recognition of hydrogen-bonded and geometrical features. Biopolymers, 22(12), 2577-2637.
 
 5. HOTSPOT & PTM "MOTIFS"
+    - Some PTMs are best predicted by sequence, but this tool is intentionally structure-only.
     - N-Glycosylation, ASN Deamidation, ASP Isomerization, GLN Deamidation candidate residues are identified using defined motifs based on 3D proximity, not sequence; Spatial Cutoff of R = 5.0 Å (sidechain neighbor search radius).
     - MET Oxidation, HIS Oxidation, TRP Oxidation, CYS Oxidation surface-exposed residues are identified based on 3D proximity, not sequence; Spatial Cutoff of R = 5.0 Å (sidechain neighbor search radius).
     - Free CYS residues are identified structurally as exposed unpaired cysteines (SG not within DISULFIDE_DIST of another SG).
     - Literature: 
-
 """
 
 # --- BIOPHYSICAL CONSTANTS AND SCALES ---
@@ -76,7 +76,6 @@ DISULFIDE_DIST = 2.2   # Å SG–SG (literature has it ~ 2.05)
 
 MAX_ASA = residue_sasa_scales["Wilke"]
 
-
 # --- TRUNCATION MASKING PARAMETERS ---
 """
 Since pdb structures are Fab or Fv structures, the C-termini for the Heavy and Light Chains will be masked.
@@ -87,6 +86,7 @@ N_MASK_LIGHT = 5    # Chain B (light, CL C-terminus)
 # --- HOTSPOTS AND PTM HELPER FUNCTIONS ---
 def get_max_asa(resname):
     """Get max ASA for 3-letter residue code."""
+
     return MAX_ASA.get(resname.upper(), 1.0)
 
 
@@ -95,6 +95,7 @@ def mask_truncated_termini(chain, chain_id):
     Mask the C-terminal residues of a chain (Fab/Fv artifact) for artifact-free feature extraction.
     Change the field and value as appropriate for each specific module.
     """
+
     residues = list(chain.get_residues())
     if chain_id == 'A':
         n_mask = N_MASK_HEAVY  
@@ -105,7 +106,6 @@ def mask_truncated_termini(chain, chain_id):
         return
     for res in residues[-n_mask:]:
         res.abs_sasa = 0.0  
-        # Add module-specific helper functions here.
 
 
 def compute_abs_sasa(chain, chain_id):
@@ -113,6 +113,7 @@ def compute_abs_sasa(chain, chain_id):
     Run Shrake-Rupley SASA on a chain and store residue-level absolute SASA
     as res.abs_sasa, then applies the termini truncation masking.
     """
+
     sr = ShrakeRupley()
     sr.compute(chain, level="R")
 
@@ -124,6 +125,7 @@ def compute_abs_sasa(chain, chain_id):
 
 def get_patch_anchor_coord(res):
     """Use beta carbon (CB) atom as anchor; fallback to alpha carbon (CA)."""
+    
     if res.has_id("CB"):
         return res["CB"].get_coord()
     if res.has_id("CA"):
@@ -134,9 +136,10 @@ def get_patch_anchor_coord(res):
 # --- FAB/FV LEVEL STRUCTURE-BASED CDR MAPPING (LARGEST LOOPS) ---
 def annotate_structure_cdr_loops(struct, pdb_path, dssp_executable="/home/bunsree/miniconda3/envs/thermaldssp_env/bin/mkdssp"):
     """
-    Annotate the three largest loops (coils/turns/bends) in each chain as CDRs, structure-based only.
+    Annotate the three largest DSSP loop regions (coils/turns/bends) in each chain as a structure-based CDR-proxy.
     Adds .is_cdr and .cdr_name attributes to residues.
     """
+    
     dssp = DSSP(struct[0], str(pdb_path), dssp=dssp_executable)
     for chain in struct[0]:
         chain_id = chain.get_id()
@@ -156,7 +159,7 @@ def annotate_structure_cdr_loops(struct, pdb_path, dssp_executable="/home/bunsre
             loops.append(list(current_loop))
         loops = sorted(loops, key=len, reverse=True)[:3]
         for idx, loop in enumerate(loops):
-            cdr_name = f"CDR_like_{idx+1}"
+            cdr_name = f"CDR_proxy_{idx+1}"
             for res in loop:
                 setattr(res, "is_cdr", True)
                 setattr(res, "cdr_name", cdr_name)
@@ -165,10 +168,12 @@ def annotate_structure_cdr_loops(struct, pdb_path, dssp_executable="/home/bunsre
                 setattr(res, "is_cdr", False)
                 setattr(res, "cdr_name", None)
 
+
 def get_cdr_residues(struct):
     """
-    Return a list of all residues in the structure that are annotated as CDRs.
+    Return a list of all residues in the structure that are annotated as CDR-proxies.
     """
+    
     cdr_residues = []
     for chain in struct[0]:
         for res in chain.get_residues():
@@ -180,8 +185,9 @@ def get_cdr_residues(struct):
 def count_cdr_ptm_sites(ptm_candidates, struct):
     """
     Given a list of PTM candidate dicts and a structure,
-    return the number of candidates that are in CDRs.
+    return the number of candidates that are in the CDR-proxies.
     """
+    
     count = 0
     for cand in ptm_candidates:
         chain_id = cand["chain_id"]
@@ -210,6 +216,7 @@ def calculate_secondary_structure_features(struct, pdb_path, dssp_executable="/h
     - secondary_structure_percentages: Dictionary with percentages of secondary structure elements.
       Example: {"alpha_helix": 45.0, "beta_sheet": 30.0, "coil": 25.0}
     """
+    
     print(f"Running DSSP on {pdb_path} with executable {dssp_executable}")
     
     # Run DSSP on the structure
@@ -256,6 +263,7 @@ def analyze_n_glycosylation(struct, radius=5.0):
     heavily associated with the pathogenesis of AL amyloidosis.
     Returns a list of dicts with residue info.
     """
+    
     n_glycosylation_candidates = []
 
     for chain in struct[0]:
@@ -326,6 +334,7 @@ def analyze_asn_deamidation(struct, radius=5.0):
     An ammonia molecule is expelled.
     Returns a list of dicts with residue info.
     """
+    
     asn_deamidation_candidates = []
     for chain in struct[0]:
         residues = [res for res in chain.get_residues() if is_aa(res, standard=True) and res.id[0] == " "]
@@ -376,7 +385,7 @@ def analyze_asn_deamidation(struct, radius=5.0):
     return asn_deamidation_candidates, result        
 
 
-def analyze_asp_isomerization(struct, radius=5.0):        # Some PTMs are best predicted by sequence, but this tool is intentionally structure-only.
+def analyze_asp_isomerization(struct, radius=5.0):
     """
     Identify ASP isomerization motif sites (D-G) based on 3D proximity, not sequence.
     ASP cyclizes via succinimide intermediate to isoASP directly (not deamidation).
@@ -384,6 +393,7 @@ def analyze_asp_isomerization(struct, radius=5.0):        # Some PTMs are best p
     A water molecule is expelled via a dehydration reaction.
     Returns a list of dicts with residue info.
     """
+    
     asp_isomerization_candidates = []
     for chain in struct[0]:
         residues = [res for res in chain.get_residues() if is_aa(res, standard=True) and res.id[0] == " "]
@@ -440,6 +450,7 @@ def analyze_gln_deamidation(struct, radius=5.0):
     GLN deamidation is slower than ASN.
     Returns a list of dicts with residue info and structural features.
     """
+    
     gln_deamidation_candidates = []
     for chain in struct[0]:
         residues = [res for res in chain.get_residues() if is_aa(res, standard=True) and res.id[0] == " "]
@@ -496,6 +507,7 @@ def analyze_met_oxidation(struct):
     Oxidation to methionine sulfoxide causes potency loss and heterogeneity.
     Returns a list of dicts with residue info and structural features.
     """
+    
     met_oxidation_candidates = []
     for chain in struct[0]:
         residues = [res for res in chain.get_residues() if is_aa(res, standard=True) and res.id[0] == " "]
@@ -546,6 +558,7 @@ def analyze_his_oxidation(struct):
     both relevant liabilities in CDR regions.
     Returns a list of dicts with residue info and structural features.
     """
+    
     his_oxidation_candidates = []
     for chain in struct[0]:
         residues = [res for res in chain.get_residues() if is_aa(res, standard=True) and res.id[0] == " "]
@@ -595,6 +608,7 @@ def analyze_trp_oxidation(struct):      # check if I need to calculate buried?
     Oxidizes to kynurenine or oxolactone under oxidative stress????
     Returns a list of dicts with residue info and structural features.
     """
+    
     trp_oxidation_candidates = []
     for chain in struct[0]:
         residues = [res for res in chain.get_residues() if is_aa(res, standard=True) and res.id[0] == " "]
@@ -644,6 +658,7 @@ def analyze_cys_oxidation(struct):
     Cysteine features a highly reactive terminal thiol (-SH) group.
     Returns a list of dicts with residue info.
     """
+    
     cys_oxidation_candidates = []
     for chain in struct[0]:
         residues = [res for res in chain.get_residues() if is_aa(res, standard=True) and res.id[0] == " "]
@@ -690,10 +705,11 @@ def analyze_cys_oxidation(struct):
 def analyze_free_cys(struct):
     """
     Exposed CYS with free thiol (SG not within disulfide distance of another SG).
-    Free thiols cause spurious?? intermolecular disulfides and aggregation.
-    Disulfide detection threshold: SG-SG distance < DISULFIDE_DIST (2.2 Å). DOUBLE CHECK FROM 2.2 OR 2.5
+    Free thiols can form unintended intermolecular disulfides and contribute to aggregation.
+    Disulfide detection threshold: SG-SG distance < DISULFIDE_DIST (2.2 Å).
     Returns a list of dicts with residue info.
     """
+    
     free_cys_candidates = []
 
     all_sg_atoms = []
