@@ -303,7 +303,7 @@ def analyze_n_glycosylation(struct, radius=5.0):
                             "abs_sasa": getattr(res_n, "abs_sasa", 0.0),
                             "bfactor": np.mean([atom.get_bfactor() for atom in res_n.get_atoms()]),
                         })
-                        break  # Only need one valid motif per ASN
+                        break
     
     result = {
         "N_Glycosylation_Count": len(n_glycosylation_candidates)
