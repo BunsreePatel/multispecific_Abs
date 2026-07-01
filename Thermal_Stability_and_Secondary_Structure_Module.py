@@ -1020,7 +1020,7 @@ def calculate_tm_proxy(struct):
     K_NU                = Q_U / (1 - Q_U)           # rearranged
     K_NU                = 0.50 / (1 - 0.50) = 1
 
-    Since ln(1) = 0, the standard R·T·ln(K) offset vanishes entirely. Tm_proxy is found simply where ΔG_NU(T) ≈ 0.
+    Since ln(1) = 0, the term -R·T·ln(K_NU) vanishes. Tm_proxy is found simply where ΔG_NU(T) ≈ 0.
 
     ΔG_NU(T) =  ΔH_REF + ΔCp(T - T_REF) - T[ΔS_REF + ΔCp·ln(T/T_REF)]
     0 = ΔH_REF + ΔCp(T - T_REF) - T[ΔS_REF + ΔCp·ln(T/T_REF)]
@@ -1074,7 +1074,7 @@ def calculate_chain_tm_proxy(chain):
     K_NU                = Q_U / (1 - Q_U)           # rearranged
     K_NU                = 0.50 / (1 - 0.50) = 1
 
-    Since ln(1) = 0, the standard R·T·ln(K) offset vanishes entirely. Tm_proxy is found simply where ΔG_NU(T) ≈ 0.
+    Since ln(1) = 0, the term -R·T·ln(K_NU) vanishes. Tm_proxy is found simply where ΔG_NU(T) ≈ 0.
 
     ΔG_NU(T) =  ΔH_REF + ΔCp(T - T_REF) - T[ΔS_REF + ΔCp·ln(T/T_REF)]
     0 = ΔH_REF + ΔCp(T - T_REF) - T[ΔS_REF + ΔCp·ln(T/T_REF)]
