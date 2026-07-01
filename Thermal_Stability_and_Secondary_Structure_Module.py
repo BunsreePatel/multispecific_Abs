@@ -44,15 +44,15 @@ THERMAL STABILITY FEATURES (3D-Dependent):
     - Literature: Röthisberger, D., Honegger, A., & Plückthun, A. (2005). Domain interactions in the Fab fragment: A comparative evaluation of the single-chain Fv and Fab format engineered with variable domains of different stability. Journal of Molecular Biology, 347(4), 773-789.
 
 3. SOLVENT-ACCESSIBLE SURFACE AREA (SASA)
-    - Folded (Hydrophobic and Polar) calculated using Shrake-Rupley  rolling-probe algorithm
-    - Unfolded (Hydrophobic and Polar) approximated from MAX_ASA (Wilke scale)
+    - Folded SASA (Hydrophobic and Polar) calculated using Shrake-Rupley  rolling-probe algorithm
+    - Unfolded SASA (Hydrophobic and Polar) approximated from MAX_ASA (Wilke scale)
     - Literature: Shrake, A., & Rupley, J. A. (1973). Environment and exposure to solvent of protein atoms. Lysozyme and insulin. Journal of Molecular Biology, 79(2), 351-371.
     
 4. STRUCTURAL SUBFEATURES (ENTHALPY AND ENTROPY) (Van der Waals??? MIGHT NEED TO ADD THIS!!!)
     - Interaction Geometry Cutoffs:
-        DISULFIDE_DIST              = 2.2           # Å SG-SG (literature has it ~ 2.05)
-        SALT_DIST                   = 4.0           # Å interaction between positively charged AA (LYS or ARG) and negatively charged AA (ASP or GLU)
-        HBOND_DIST                  = 3.5           # Å N or O donor-acceptor (literature has it ~2.7-3.5)
+        DISULFIDE_DIST              = 2.2           # Å | SG-SG (literature has it ~ 2.05)
+        SALT_DIST                   = 4.0           # Å | interaction between positively charged AA (LYS or ARG) and negatively charged AA (ASP or GLU)
+        HBOND_DIST                  = 3.5           # Å | N or O donor-acceptor (literature has it ~2.7-3.5)
     - Literature: McAuley, A., Jacob, J., Kolvenbach, C. G., et al. (2008). Contributions of a disulfide bond to the structure, stability, and dimerization of human IgG1 antibody CH3 domain. Protein Science, 17(1), 95-106.
     - Literature: Donald, J. E., Kulp, D. W., & DeGrado, W. F. (2011). Salt bridges: Geometrically specific, designable interactions. Proteins, 79(3), 898-915.
     - Literature: Kabsch, W., & Sander, C. (1983). Dictionary of protein secondary structure: Pattern recognition of hydrogen-bonded and geometrical features. Biopolymers, 22(12), 2577-2637.
@@ -61,7 +61,7 @@ THERMAL STABILITY FEATURES (3D-Dependent):
         DELTAH_DISULFIDE            = -4.0          # kcal/mol per disulfide
         DELTAH_SALTBRIDGE           = -4.0          # kcal/mol per salt bridge
         DELTAH_HBOND                = -1.0          # kcal/mol per backbone H-bond
-        HYDRO_CP_ALPHA              = 0.00034       # kcal/(mol·K·Å²) (hydrophobic heat capacity coefficient)   (Streit, 2024)
+        HYDROPHOBIC_CP_ALPHA        = 0.00034       # kcal/(mol·K·Å²) (hydrophobic heat capacity coefficient)   (Streit, 2024)
         POLAR_CP_BETA               = -0.00012      # kcal/(mol·K·Å²) (polar heat capacity coefficient)         (Streit, 2024)
         GAMMA_HYDROPHOBIC_ENERGY    = 0.025         # kcal/mol/Å²  (solvation coefficient) 
     - Literature: Pace, C. N., Grimsley, G. R., Thomson, J. A., et al. (1988). Conformational stability and activity of ribonuclease T1 with zero, one, and two intact disulfide bonds. The Journal of Biological Chemistry, 263(24), 11620-11625.
@@ -92,13 +92,15 @@ THERMAL STABILITY FEATURES (3D-Dependent):
         ΔCp_proxy:                  heat-capacity proxy from ΔSASA                  # kcal/mol·K
         ΔS_REF:                     entropy proxy at T_REF                          # kcal/mol·K
         ΔG_NU_at_T_REF              = ΔH_REF - T_REF*ΔS_REF (optional but recommended as a QC/reference feature)
-    - Two-state equilibrium:
-        K_NU(T) = exp(-ΔG_NU(T)/(R*T))
-        fraction_unfolded = K_NU/(1 + K_NU)
+    - Two-state equilibrium terms:
+        K_NU = [U]/[N] ; [U] and [N] concentrations of unfolded and native protein
+        K_NU(T) = exp(-ΔG_NU(T)/(R·T))
+        ΔG_NU(T) = -R·T·ln(K_NU(T))
+        fraction_unfolded (Q_U) = K_NU/(1 + K_NU)
     - Thermal proxies:
         Tm_proxy: scan T in [T_LOW, T_HIGH] (1000 points) and return T where |ΔG_NU(T)| is minimal (≈ ΔG_NU(T)=0)
         T_onset_proxy: use fraction_unfolded directly; compute ln_K = ln(fraction_unfolded)/(1-fraction_unfolded));
-                       scan T in [T_LOW, T_HIGH] (1000 points) and return T where |ΔG_NU(T) + RT·ln(K_NU)| is minimal.
+                       scan T in [T_LOW, T_HIGH] (1000 points) and return T where |ΔG_NU(T) + R·T·ln(K_NU)| is minimal.
     - Literature: Pace, C. N., & Laurents, D. V. (1989). A new method for determining the heat capacity change for protein folding. Biochemistry, 28(6), 2520-2525.
     - Literature: Murphy, K. P., & Freire, E. (1992). Thermodynamics of structural stability and cooperative folding behavior in proteins. Advances in Protein Chemistry, 43, 313-361.
 
@@ -114,13 +116,12 @@ AROMATIC_RESIDUES = ['PHE', 'TYR', 'TRP']
 POSITIVE_RESIDUES = ['ARG', 'LYS', 'HIS']
 NEGATIVE_RESIDUES = ['ASP', 'GLU']
 
-# check on Are you using DSSP to differentiate between surface-exposed Tyr (acting as a polar sticker) and buried Tyr (acting as a hydrophobic core residue)?
 
-# --- THERMODYNAMIC CONSTANTS --- # DOUBLE CHECK ON THESE WITH LITERATURE!!!
-T_REF= 298.15           # Standard temperature in Kelvin (25°C)
-T_LOW = 273.15          # 0°C in Kelvin
-T_HIGH = 403.15         # 130°C in Kelvin
-R = 8.314               # Gas constant in J/(mol·K)
+# --- THERMODYNAMIC CONSTANTS ---
+T_REF= 298.15           # Kelvin | 25°C Standard temperature
+T_LOW = 273.15          # Kelvin | 0°C 
+T_HIGH = 403.15         # Kelvin | 130°C
+R = 8.314               # J/(mol·K) | Universal gas constant
 R_CAL = 1.987           # cal/(mol·K)
 R_KCAL = 0.001987       # kcal/(mol·K)
 
@@ -133,7 +134,7 @@ HBOND_DIST                  = 3.5       # Å N or O donor–acceptor (literature
 DELTAH_DISULFIDE            = -4.0      # kcal/mol per disulfide
 DELTAH_SALTBRIDGE           = -4.0      # kcal/mol per salt bridge
 DELTAH_HBOND                = -1.0      # kcal/mol per backbone H-bond
-HYDRO_CP_ALPHA              = 0.00034   # kcal/(mol·K·Å²) (hydrophobic heat capacity coefficient)   (Streit, 2024)
+HYDROPHOBIC_CP_ALPHA        = 0.00034   # kcal/(mol·K·Å²) (hydrophobic heat capacity coefficient)   (Streit, 2024)
 POLAR_CP_BETA               = -0.00012  # kcal/(mol·K·Å²) (polar heat capacity coefficient)         (Streit, 2024)
 GAMMA_HYDROPHOBIC_ENERGY    = 0.025     # kcal/mol/Å²  (solvation coefficient)
 
@@ -804,7 +805,7 @@ def calc_delta_Cp_proxy(struct):
     - struct: Biopython structure object
 
     Returns:
-    - delta_Cp_proxy as HYDRO_CP_ALPHA·delta_sasa_hydrophobic + POLAR_CP_BETA·delta_sasa_polar in kcal/(mol·K)
+    - delta_Cp_proxy as HYDROPHOBIC_CP_ALPHA·delta_sasa_hydrophobic + POLAR_CP_BETA·delta_sasa_polar in kcal/(mol·K)
     - delta_sasa_hydrophobic in Å²
     - delta_sasa_polar in Å²
     - hydrophobic_sasa_folded in Å²
@@ -827,7 +828,7 @@ def calc_delta_Cp_proxy(struct):
 
     # ΔCp proxy
     delta_Cp_proxy = (
-        (delta_sasa_hydrophobic * HYDRO_CP_ALPHA) + 
+        (delta_sasa_hydrophobic * HYDROPHOBIC_CP_ALPHA) + 
         (delta_sasa_polar * POLAR_CP_BETA)
     )
 
@@ -865,7 +866,7 @@ def calc_chain_delta_Cp_proxy(chain):
 
     # ΔCp proxy
     chain_delta_Cp_proxy = (
-        (chain_delta_sasa_hydrophobic * HYDRO_CP_ALPHA) + 
+        (chain_delta_sasa_hydrophobic * HYDROPHOBIC_CP_ALPHA) + 
         (chain_delta_sasa_polar * POLAR_CP_BETA)
     )
 
@@ -1008,24 +1009,34 @@ def calculate_tm_proxy(struct):
     Estimate melting temperature (Tm) proxy via two-state Gibbs-Helmholtz.
     Approximates T where ΔG_NU(T) ≈ 0 by scanning T from T_LOW to T_HIGH
     and selecting the T with the smallest |ΔG_NU(T)|.
-
-    ΔG_NU(T) =  ΔH_REF + ΔCp(T - T_REF) - T[ΔS_REF + ΔCpln(T/T_REF)]
-    0 = ΔH_REF + ΔCp(T - T_REF) - T[ΔS_REF + ΔCpln(T/T_REF)]
     
-    Expand:
-    0 = ΔH_REF + ΔCpT - ΔCpT_REF - TΔS_REF + TΔCpln(T/T_REF)
-    
-    Rearrange:
-    TΔS_REF + TΔCpln(T/T_REF) = ΔH_REF + ΔCpT - ΔCpT_REF
+    At Tm_proxy, the fraction unfolded (Q_U) = 0.50:
 
+    Q_U(T)              = K_NU(T) / (1 + K_NU(T))   # extent of unfolding, from literature
+    K_NU                = Q_U · (1 + K_NU)
+    K_NU                = Q_U + Q_U·K_NU
+    K_NU - Q_U·K_NU     = Q_U
+    K_NU·(1 - Q_U)      = Q_U
+    K_NU                = Q_U / (1 - Q_U)           # rearranged
+    K_NU                = 0.50 / (1 - 0.50) = 1
+
+    Since ln(1) = 0, the standard R·T·ln(K) offset vanishes entirely. Tm_proxy is found simply where ΔG_NU(T) ≈ 0.
+
+    ΔG_NU(T) =  ΔH_REF + ΔCp(T - T_REF) - T[ΔS_REF + ΔCp·ln(T/T_REF)]
+    0 = ΔH_REF + ΔCp(T - T_REF) - T[ΔS_REF + ΔCp·ln(T/T_REF)]
+    # Expand:
+    0 = ΔH_REF + ΔCp·T - ΔCp·T_REF - T·ΔS_REF - T·ΔCp·ln(T/T_REF)
+    # Rearrange:
+    T·ΔS_REF + T·ΔCp·ln(T/T_REF) = ΔH_REF + ΔCp·T - ΔCp·T_REF
+    
     T_REF = 298.15 K (reference temperature for static pdb);
-    Tm_proxy is the T in [T_LOW, T_HIGH] that minimizes |ΔG_NU(T)|.
+    Tm_proxy is the T in [T_LOW, T_HIGH] that minimizes |ΔG_NU(T)|.  
 
     Parameters:
     - struct: Biopython structure object
 
     Returns:
-    - Tm proxy in Kelvin
+    - Tm_proxy in Kelvin
     """
     
     residues = []
@@ -1052,16 +1063,26 @@ def calculate_chain_tm_proxy(chain):
     Estimate melting temperature (Tm) proxy via two-state Gibbs-Helmholtz.
     Approximates T where ΔG_NU(T) ≈ 0 by scanning T from T_LOW to T_HIGH
     and selecting the T with the smallest |ΔG_NU(T)|.
-
-    ΔG_NU(T) =  ΔH_REF + ΔCp(T - T_REF) - T[ΔS_REF + ΔCpln(T/T_REF)]
-    0 = ΔH_REF + ΔCp(T - T_REF) - T[ΔS_REF + ΔCpln(T/T_REF)]
     
-    Expand:
-    0 = ΔH_REF + ΔCpT - ΔCpT_REF - TΔS_REF + TΔCpln(T/T_REF)
-    
-    Rearrange:
-    TΔS_REF + TΔCpln(T/T_REF) = ΔH_REF + ΔCpT - ΔCpT_REF
+    At Tm_proxy, the fraction unfolded (Q_U) = 0.50:
 
+    Q_U(T)              = K_NU(T) / (1 + K_NU(T))   # extent of unfolding, from literature
+    K_NU                = Q_U · (1 + K_NU)
+    K_NU                = Q_U + Q_U·K_NU
+    K_NU - Q_U·K_NU     = Q_U
+    K_NU·(1 - Q_U)      = Q_U
+    K_NU                = Q_U / (1 - Q_U)           # rearranged
+    K_NU                = 0.50 / (1 - 0.50) = 1
+
+    Since ln(1) = 0, the standard R·T·ln(K) offset vanishes entirely. Tm_proxy is found simply where ΔG_NU(T) ≈ 0.
+
+    ΔG_NU(T) =  ΔH_REF + ΔCp(T - T_REF) - T[ΔS_REF + ΔCp·ln(T/T_REF)]
+    0 = ΔH_REF + ΔCp(T - T_REF) - T[ΔS_REF + ΔCp·ln(T/T_REF)]
+    # Expand:
+    0 = ΔH_REF + ΔCp·T - ΔCp·T_REF - T·ΔS_REF - T·ΔCp·ln(T/T_REF)
+    # Rearrange:
+    T·ΔS_REF + T·ΔCp·ln(T/T_REF) = ΔH_REF + ΔCp·T - ΔCp·T_REF
+    
     T_REF = 298.15 K (reference temperature for static pdb);
     Tm_proxy is the T in [T_LOW, T_HIGH] that minimizes |ΔG_NU(T)|.
     """
@@ -1087,29 +1108,26 @@ def calculate_chain_tm_proxy(chain):
 def calculate_t_onset_proxy(struct, fraction_unfolded=0.02):
     """
     Estimate onset temperature (T_onset) proxy via two-state Gibbs-Helmholtz.
-    Approximates T where ΔG_NU(T) + RTln(K_NU) ≈ 0 by scanning T from T_LOW to T_HIGH
+    Approximates T where ΔG_NU(T) + RT·ln(K_NU) ≈ 0 by scanning T from T_LOW to T_HIGH
     and selecting the T with the smallest |ΔG_NU(T) + RT·ln(K_NU)|.
+    
+    At T_onset_proxy, the fraction unfolded (Q_U) = 0.02:
 
-    Q_U(T)              = K_NU(T) / (1 + K_NU(T)) # extent of unfolding, from literature
+    Q_U(T)              = K_NU(T) / (1 + K_NU(T))   # extent of unfolding, from literature
+    K_NU                = Q_U / (1 - Q_U)           # rearranged
 
-    K_NU                = Q_U · (1 + K_NU)
-    K_NU                = Q_U + Q_U·K_NU
-    K_NU - Q_U·K_NU     = Q_U
-    K_NU·(1 - Q_U)      = Q_U
-    K_NU                = Q_U / (1 - Q_U) # rearranged; Q_U = fraction_unfolded at T_onset
-
-    ΔG_NU(T) =  ΔH_REF + ΔCp(T - T_REF) - T[ΔS_REF + ΔCpln(T/T_REF)]
-    0 = ΔH_REF + ΔCp(T - T_REF) - T[ΔS_REF + ΔCp·ln(T/T_REF)] + RT·ln(K_NU)
+    ΔG_NU(T) =  ΔH_REF + ΔCp(T - T_REF) - T[ΔS_REF + ΔCp·ln(T/T_REF)]
+    0 = ΔH_REF + ΔCp(T - T_REF) - T[ΔS_REF + ΔCp·ln(T/T_REF)] + R·T·ln(K_NU)
 
     T_REF = 298.15 K (reference temperature for static pdb);
-    T_onset is the T in [T_LOW, T_HIGH] that minimizes |ΔG_NU(T) + RT·ln(K_NU)|.
+    T_onset_proxy is the T in [T_LOW, T_HIGH] that minimizes |ΔG_NU(T) + R·T·ln(K_NU)|.
 
     Parameters:
     - struct: Biopython structure object
     - fraction_unfolded: unfolding_extent at onset (default 0.02 = 2%)
 
     Returns:
-    - T_onset proxy in Kelvin
+    - T_onset_proxy in Kelvin
     """
 
     residues = []
@@ -1135,23 +1153,20 @@ def calculate_t_onset_proxy(struct, fraction_unfolded=0.02):
 
 def calculate_chain_t_onset_proxy(chain, fraction_unfolded=0.02):
     """
-    Estimate onset temperature (T_onset) proxy via two-state Gibbs-Helmholtz of a single chain.
-    Approximates T where ΔG_NU(T) + RTln(K_NU) ≈ 0 by scanning T from T_LOW to T_HIGH
+    Estimate onset temperature (T_onset) proxy via two-state Gibbs-Helmholtz of a single chain. 
+    Approximates T where ΔG_NU(T) + RT·ln(K_NU) ≈ 0 by scanning T from T_LOW to T_HIGH
     and selecting the T with the smallest |ΔG_NU(T) + RT·ln(K_NU)|.
+    
+    At T_onset_proxy, the fraction unfolded (Q_U) = 0.02:
 
-    Q_U(T)              = K_NU(T) / (1 + K_NU(T)) # extent of unfolding, from literature
+    Q_U(T)              = K_NU(T) / (1 + K_NU(T))   # extent of unfolding, from literature
+    K_NU                = Q_U / (1 - Q_U)           # rearranged
 
-    K_NU                = Q_U · (1 + K_NU)
-    K_NU                = Q_U + Q_U·K_NU
-    K_NU - Q_U·K_NU     = Q_U
-    K_NU·(1 - Q_U)      = Q_U
-    K_NU                = Q_U / (1 - Q_U) # rearranged; Q_U = fraction_unfolded at T_onset
-
-    ΔG_NU(T) =  ΔH_REF + ΔCp(T - T_REF) - T[ΔS_REF + ΔCpln(T/T_REF)]
-    0 = ΔH_REF + ΔCp(T - T_REF) - T[ΔS_REF + ΔCp·ln(T/T_REF)] + RT·ln(K_NU)
+    ΔG_NU(T) =  ΔH_REF + ΔCp(T - T_REF) - T[ΔS_REF + ΔCp·ln(T/T_REF)]
+    0 = ΔH_REF + ΔCp(T - T_REF) - T[ΔS_REF + ΔCp·ln(T/T_REF)] + R·T·ln(K_NU)
 
     T_REF = 298.15 K (reference temperature for static pdb);
-    T_onset is the T in [T_LOW, T_HIGH] that minimizes |ΔG_NU(T) + RT·ln(K_NU)|.
+    T_onset_proxy is the T in [T_LOW, T_HIGH] that minimizes |ΔG_NU(T) + R·T·ln(K_NU)|.
     """
 
     residues = []
