@@ -11,7 +11,7 @@ from Bio.Data.PDBData import residue_sasa_scales
 warnings.filterwarnings("ignore")
 
 # --- PATHS ---
-BASE_DIRS = [  
+BASE_DIRS = [
     Path("/home/bunsree/projects/multispecific_Abs/scFv"),
     Path("/home/bunsree/projects/multispecific_Abs/Bispecific_scFv"),
     Path("/home/bunsree/projects/multispecific_Abs/BiTE (Bispecific T-Cell Engager)"),
@@ -1239,7 +1239,7 @@ def calculate_chain_complementary_charge_patches(chain):
 
 # --- MAIN PIPELINE ---
 def run_structure_hydrophobicity_aggregation_analysis():
-    MASTER_CSV = Path("C:/Users/bunsr/rosalind-bioinformatics/multispecific_antibodies/TheraSAbDab_SeqStruc_07Dec2025.csv")
+    MASTER_CSV = Path("/home/bunsree/projects/multispecific_Abs/TheraSAbDab_SeqStruc_07Dec2025.csv")
     # Read MASTER_CSV
     df_master = pd.read_csv(MASTER_CSV)
     df_master['key'] = df_master['Therapeutic'].str.lower().str.strip()
