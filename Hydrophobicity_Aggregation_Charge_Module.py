@@ -12,14 +12,14 @@ warnings.filterwarnings("ignore")
 
 # --- PATHS ---
 BASE_DIRS = [  
-    Path(r"C:\Users\bunsr\rosalind-bioinformatics\multispecific_antibodies\scFv"),
-    Path(r"C:\Users\bunsr\rosalind-bioinformatics\multispecific_antibodies\Bispecific_scFv"),
-    Path(r"C:\Users\bunsr\rosalind-bioinformatics\multispecific_antibodies\BiTE (Bispecific T-Cell Engager)"),
-    Path(r"C:\Users\bunsr\rosalind-bioinformatics\multispecific_antibodies\Bispecific_mAb"),
-    Path(r"C:\Users\bunsr\rosalind-bioinformatics\multispecific_antibodies\Whole_mAb_all")
+    Path("/home/bunsree/projects/multispecific_Abs/scFv"),
+    Path("/home/bunsree/projects/multispecific_Abs/Bispecific_scFv"),
+    Path("/home/bunsree/projects/multispecific_Abs/BiTE (Bispecific T-Cell Engager)"),
+    Path("/home/bunsree/projects/multispecific_Abs/Bispecific_mAb"),
+    Path("/home/bunsree/projects/multispecific_Abs/Whole_mAb")
 ]
 
-MASTER_CSV = Path("C:/Users/bunsr/rosalind-bioinformatics/multispecific_antibodies/TheraSAbDab_SeqStruc_07Dec2025.csv")
+MASTER_CSV = Path("/home/bunsree/projects/multispecific_Abs/TheraSAbDab_SeqStruc_07Dec2025.csv")
 
 """
 THEORY: STRUCTURE-BASED HYDROPHOBICITY AND AGGREGATION MODULE
