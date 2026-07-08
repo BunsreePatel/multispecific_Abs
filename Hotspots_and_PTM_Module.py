@@ -484,7 +484,7 @@ def analyze_gln_deamidation(struct, radius=5.0):
                 break  # Only need one valid motif per GLN
     
     result = {
-        "GLN_Isomerization_Count": len(gln_deamidation_candidates)
+        "GLN_Deamidation_Count": len(gln_deamidation_candidates)
     }
 
     for i, site in enumerate(gln_deamidation_candidates, start=1):
@@ -928,7 +928,7 @@ def run_structure_hotspots_and_ptm_analysis():
                     "N_Glycosylation_Count": n_glyco_result["N_Glycosylation_Count"],
                     "ASN_Deamidation_Count": asn_deam_result["ASN_Deamidation_Count"],
                     "ASP_Isomerization_Count": asp_iso_result["ASP_Isomerization_Count"],
-                    "GLN_Deamidation_Count":gln_deam_result["GLN_Isomerization_Count"],
+                    "GLN_Deamidation_Count":gln_deam_result["GLN_Deamidation_Count"],
                     "MET_Oxidation_Count": met_ox_result["MET_Oxidation_Count"],
                     "HIS_Oxidation_Count": his_ox_result["HIS_Oxidation_Count"],
                     "TRP_Oxidation_Count": trp_ox_result["TRP_Oxidation_Count"],
