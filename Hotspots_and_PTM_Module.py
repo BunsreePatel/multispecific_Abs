@@ -994,9 +994,6 @@ def run_structure_hotspots_and_ptm_analysis():
                 .str.strip()
             )
 
-            #df['Therapeutic'].str.lower().str.replace("_fab1", "", regex=False).str.replace("_fab2", "", regex=False).str.replace("_fab", "", regex=False).str.replace("_fv_bite", "", regex=False).str.replace("_fv1", "", regex=False).str.replace("_scfv", "", regex=False).str.replace(" ", "", regex=False).str.strip()
-            #df_master['key'] = df_master['Therapeutic'].str.lower().str.replace("_fab1", "", regex=False).str.replace("_fab2", "", regex=False).str.replace("_fab", "", regex=False).str.replace("_fv_bite", "", regex=False).str.replace("_fv1", "", regex=False).str.replace("_scfv", "", regex=False).str.replace(" ", "", regex=False).str.strip()
-
             # merge on the cleaned 'key' column and report unmatched keys
             df = pd.merge(df, df_master[['key', 'CH1 Isotype', 'VD LC']], on='key', how='left', indicator=True)
 
@@ -1010,9 +1007,17 @@ def run_structure_hotspots_and_ptm_analysis():
             # drop temporary merge columns
             df.drop(columns=['key', '_merge'], inplace=True)
 
-            # reorder columns
-            cols = ['Therapeutic', 'CH1 Isotype', 'VD LC'] + [c for c in df.columns if c not in ['Therapeutic', 'CH1 Isotype', 'VD LC']]
-            df = df[cols]
+            # Reorder PTM columns in natural order (ASN1, ASN2, ASN3, ... instead of the order in which pandas first encountered them)
+            def natural_key(col):
+                m = re.match(r'([A-Za-z_]+?)(\d+)_(.*)', col)
+                if m:
+                    prefix, number, suffix = m.groups()
+                    return (prefix, int(number), suffix)
+                return (col, 0, "")
+            
+            fixed_cols = ['Therapeutic', 'CH1 Isotype', 'VD LC']
+            other_cols = [c for c in df.columns if c not in fixed_cols]
+            df = df[fixed_cols + sorted(other_cols, key=natural_key)]
 
             # save final CSV
             df.to_csv(OUTPUT_CSV, index=False)
