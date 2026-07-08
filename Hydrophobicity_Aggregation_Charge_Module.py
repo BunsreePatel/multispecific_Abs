@@ -1251,7 +1251,7 @@ def run_structure_hydrophobicity_aggregation_analysis():
 
         print(f"\n=== Running analysis for {BASE_DIR} ===")
     
-        OUTPUT_CSV = BASE_DIR / "Structure_Based_Hydrophobicity_Aggregation_Module.csv"
+        OUTPUT_CSV = BASE_DIR / "Structure_Based_Hydrophobicity_Aggregation_Charge_Module.csv"
     
         # Recursively find all PDB files under BASE_DIR with minimal duplicate-key protection.
         pdb_map = {}
