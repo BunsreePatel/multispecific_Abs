@@ -24,15 +24,15 @@ Antibody sequences obtained from [Thera-SAbDab](https://opig.stats.ox.ac.uk/weba
 - Dunbar, J., Krawczyk, K. et al (2014) SAbDab: the Structural Antibody Database. *Nucleic Acids Res.* 42:D1140-D1146
 
 #### Phase 2
-Folding of antibody sequences into pdb structure files using ColabFold. Each module contains structure-based feature calculations.
+Antibody Structure-Based Feature Engineering - Phase 2 converts antibody sequence data from Phase 1 into PDB structure files using ColabFold and extracts quantitative biophysical structure-based features.
 
-   Hydrophobicity, Aggregation, Charge Module
+- Hydrophobicity, Aggregation, Charge Module
 
-   Thermal Stability and Secondary Structure Module
+- Thermal Stability and Secondary Structure Module
 
-   Hotspots and PTM Susceptibility Module
+- Hotspots and PTM Susceptibility Module
 
-   Format-Specific Attributes Module
+- Format-Specific Attributes Module
 
 #### Phase 3 - In Progress
 
