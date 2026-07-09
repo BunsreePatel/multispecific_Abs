@@ -25,7 +25,7 @@ MASTER_CSV = Path("/home/bunsree/projects/multispecific_Abs/TheraSAbDab_SeqStruc
 THEORY: STRUCTURE-BASED HYDROPHOBICITY, AGGREGATION, CHARGE MODULE
 =============================================================
  
-HYDROPHOBICITY FEATURES (3D-Dependent):
+HYDROPHOBICITY, AGGREGATION, CHARGE FEATURES (3D-Dependent):
  
 1. WIMLEY-WHITE SCALE
     - Experimentally derived whole-residue hydrophobicity scale used to score surface-exposed residues for aggregation and hydrophobic patch analysis.
