@@ -1,4 +1,4 @@
-# Multispecific Antibody Predictor
+## Multispecific Antibody Predictor
 
 This GitHub repository presents an end-to-end pipeline for multispecific antibody prediction using ColabFold, extracting 3D protein features, and engineering datasets for machine learning models to assess developability and biophysical risk.
 
@@ -18,7 +18,7 @@ Multispecific Antibodies Sequence Database
 
 A collection of therapeutic multispecific and monospecific antibody sequences in FASTA format.
 
-##### Data Source
+#### Data Source
 Antibody sequences obtained from [Thera-SAbDab](https://opig.stats.ox.ac.uk/webapps/sabdab-sabpred/therasabdab/search/)
 
 **References:**
@@ -36,16 +36,16 @@ Antibody sequences obtained from [Thera-SAbDab](https://opig.stats.ox.ac.uk/weba
 
 - Format-Specific Attributes Module
 
-Phase 3 - In Progress
+#### Phase 3 - In Progress
 
-Phase 4 - Planned
+#### Phase 4 - Planned
 
-#### License
+### License
 - **Code** : MIT License
 - **Data** (antibody sequences): Sourced from Thera-SAbDab (publicly available data)
 
-#### Disclaimer
+### Disclaimer
 These sequences are from publicly available therapeutic antibodies as curated by Thera-SAbDab. For commercial use, please verify current patent status and regulatory information.
 
-#### Statistics
+### Statistics
 - Total antibodies: 628
