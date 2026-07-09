@@ -603,10 +603,10 @@ def analyze_his_oxidation(struct):
     return his_oxidation_candidates, result  
 
 
-def analyze_trp_oxidation(struct):      # check if I need to calculate buried?
+def analyze_trp_oxidation(struct):
     """
     Identify TRP oxidation sites (W) that are surface-exposed.
-    Oxidizes to kynurenine or oxolactone under oxidative stress????
+    Oxidizes to kynurenine or oxolactone under oxidative stress.
     Returns a list of dicts with residue info and structural features.
     """
     
@@ -780,7 +780,7 @@ def analyze_free_cys(struct):
 
 # --- MAIN PIPELINE ---
 def run_structure_hotspots_and_ptm_analysis():
-    MASTER_CSV = Path("/home/bunsree/projects/rosalind-bioinformatics/multispecific_antibodies/TheraSAbDab_SeqStruc_07Dec2025.csv")
+    MASTER_CSV = Path("/home/bunsree/projects/multispecific_Abs/TheraSAbDab_SeqStruc_07Dec2025.csv")
     # Read MASTER_CSV
     df_master = pd.read_csv(MASTER_CSV)
     df_master['key'] = df_master['Therapeutic'].str.lower().str.strip()

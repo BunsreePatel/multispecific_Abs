@@ -22,7 +22,7 @@ BASE_DIRS = [
 MASTER_CSV = Path("/home/bunsree/projects/multispecific_Abs/TheraSAbDab_SeqStruc_07Dec2025.csv")
 
 """
-THEORY: STRUCTURE-BASED HYDROPHOBICITY AND AGGREGATION MODULE
+THEORY: STRUCTURE-BASED HYDROPHOBICITY, AGGREGATION, AND CHARGE MODULE
 =============================================================
  
 HYDROPHOBICITY FEATURES (3D-Dependent):
@@ -78,11 +78,6 @@ HYDROPHOBICITY FEATURES (3D-Dependent):
 9. NET CHARGE, DIPOLE MOMENT, COMPLEMENTARY CHARGE PATCHES
 
     - Literature: 
-
-10. VISCOSITY
-
-    - Literature: 
-
 """
 
 # --- BIOPHYSICAL CONSTANTS AND SCALES ---
@@ -153,7 +148,6 @@ def mask_truncated_termini(chain, chain_id):
         return
     for res in residues[-n_mask:]:
         res.abs_sasa = 0.0  
-        # Add module-specific helper functions here.
 
 
 def compute_abs_sasa(chain, chain_id):
@@ -664,18 +658,18 @@ def build_aromatic_patch_candidates(struct):
                 continue
 
             resname = res.get_resname().upper()
-            rel_sasa = getattr(res, "rel_sasa", 0.0)        # CHECK ON THIS???
+            rel_sasa = getattr(res, "rel_sasa", 0.0)
 
             if resname not in AROMATIC_RESIDUES:
                 continue
-            if rel_sasa < SURFACE_EXPOSURE_THRESHOLD:       # CHECK ON THIS??
+            if rel_sasa < SURFACE_EXPOSURE_THRESHOLD:
                 continue
 
             anchor = get_patch_anchor_coord(res)
             if anchor is None:
                 continue
 
-            abs_sasa = getattr(res, "abs_sasa", 0.0)        # CHECK ON THIS??
+            abs_sasa = getattr(res, "abs_sasa", 0.0)
 
             aromatic_patch_candidates.append({
                 "chain_id": chain.get_id(),
@@ -706,18 +700,18 @@ def build_chain_aromatic_patch_candidates(chain):
             continue
 
         resname = res.get_resname().upper()
-        rel_sasa = getattr(res, "rel_sasa", 0.0)        # CHECK ON THIS???
+        rel_sasa = getattr(res, "rel_sasa", 0.0)
 
         if resname not in AROMATIC_RESIDUES:
             continue
-        if rel_sasa < SURFACE_EXPOSURE_THRESHOLD:       # CHECK ON THIS??
+        if rel_sasa < SURFACE_EXPOSURE_THRESHOLD:
             continue
 
         anchor = get_patch_anchor_coord(res)
         if anchor is None:
             continue
 
-        abs_sasa = getattr(res, "abs_sasa", 0.0)        # CHECK ON THIS??
+        abs_sasa = getattr(res, "abs_sasa", 0.0)
 
         chain_aromatic_patch_candidates.append({
             "chain_id": chain.get_id(),
@@ -1238,7 +1232,7 @@ def calculate_chain_complementary_charge_patches(chain):
 
 
 # --- MAIN PIPELINE ---
-def run_structure_hydrophobicity_aggregation_analysis():
+def run_structure_hydrophobicity_aggregation_charge_analysis():
     MASTER_CSV = Path("/home/bunsree/projects/multispecific_Abs/TheraSAbDab_SeqStruc_07Dec2025.csv")
     # Read MASTER_CSV
     df_master = pd.read_csv(MASTER_CSV)
@@ -1277,7 +1271,7 @@ def run_structure_hydrophobicity_aggregation_analysis():
         if duplicate_key_count:
             print(f"WARNING: skipped {duplicate_key_count} duplicate normalized PDB file(s).")
 
-        print(f"Found {len(pdb_map)} PDB files for HYDROPHOBICITY AND AGGREGATION analysis.")
+        print(f"Found {len(pdb_map)} PDB files for HYDROPHOBICITY, AGGREGATION, and CHARGE analysis.")
         
         # Setup tools
         parser = PDBParser(QUIET=True)
@@ -1285,7 +1279,7 @@ def run_structure_hydrophobicity_aggregation_analysis():
         failed_entries = []
         
         # Process every PDB found
-        print("--- CALCULATING STRUCTURE-BASED HYDROPHOBICITY AND AGGREGATION ANALYSIS ---")
+        print("--- CALCULATING STRUCTURE-BASED HYDROPHOBICITY, AGGREGATION, AND CHARGE ANALYSIS ---")
         for ab_name, pdb_path in tqdm(pdb_map.items()):
             try:
                 # Load pdb structure
@@ -1497,9 +1491,6 @@ def run_structure_hydrophobicity_aggregation_analysis():
                 .str.strip()
             )
 
-            #df['Therapeutic'].str.lower().str.replace("_fab1", "", regex=False).str.replace("_fab2", "", regex=False).str.replace("_fab", "", regex=False).str.replace("_fv_bite", "", regex=False).str.replace("_fv1", "", regex=False).str.replace("_scfv", "", regex=False).str.replace(" ", "", regex=False).str.strip()
-            #df_master['key'] = df_master['Therapeutic'].str.lower().str.replace("_fab1", "", regex=False).str.replace("_fab2", "", regex=False).str.replace("_fab", "", regex=False).str.replace("_fv_bite", "", regex=False).str.replace("_fv1", "", regex=False).str.replace("_scfv", "", regex=False).str.replace(" ", "", regex=False).str.strip()
-
             # merge on the cleaned 'key' column and report unmatched keys
             df = pd.merge(df, df_master[['key', 'CH1 Isotype', 'VD LC']], on='key', how='left', indicator=True)
 
@@ -1519,8 +1510,8 @@ def run_structure_hydrophobicity_aggregation_analysis():
 
             # save final CSV
             df.to_csv(OUTPUT_CSV, index=False)
-            print(f"\n=== SUCCESS: Hydrophobicity and Aggregation analysis complete for {len(df)} antibodies ===")
+            print(f"\n=== SUCCESS: Hydrophobicity, aggregation, charge analysis complete for {len(df)} antibodies ===")
             print(f"File saved to: {OUTPUT_CSV}")
 
 if __name__ == "__main__":
-    run_structure_hydrophobicity_aggregation_analysis()
+    run_structure_hydrophobicity_aggregation_charge_analysis()

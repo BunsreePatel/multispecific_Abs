@@ -1,3 +1,5 @@
+# Note: Temporary placeholders remain for select definitions while they are being re-engineered.
+
 import os
 import warnings
 import pandas as pd
@@ -48,7 +50,7 @@ THERMAL STABILITY FEATURES (3D-Dependent):
     - Unfolded SASA (Hydrophobic and Polar) approximated from MAX_ASA (Wilke scale)
     - Literature: Shrake, A., & Rupley, J. A. (1973). Environment and exposure to solvent of protein atoms. Lysozyme and insulin. Journal of Molecular Biology, 79(2), 351-371.
     
-4. STRUCTURAL SUBFEATURES (ENTHALPY AND ENTROPY) (Van der Waals??? MIGHT NEED TO ADD THIS!!!)
+4. STRUCTURAL SUBFEATURES (ENTHALPY AND ENTROPY)
     - Interaction Geometry Cutoffs:
         DISULFIDE_DIST              = 2.2           # Å | SG-SG (literature has it ~ 2.05)
         SALT_DIST                   = 4.0           # Å | interaction between positively charged AA (LYS or ARG) and negatively charged AA (ASP or GLU)
@@ -76,7 +78,7 @@ THERMAL STABILITY FEATURES (3D-Dependent):
         DELTAS_DISULFIDE            = 1.0           # kcal/mol  PLACEHOLDER
         DELTAS_SALTBRIDGE           = 1.0           # kcal/mol per salt bridge PLACEHOLDER
         DELTAS_HBOND                = 1.0           # kcal/mol per backbone H-bond PLACEHOLDER
-        GAMMA_HYDROPHOBIC_ENTROPY   = 0.025         # kcal/mol/Å²  (entropy coefficient)??   PLACEHOLDER
+        GAMMA_HYDROPHOBIC_ENTROPY   = 0.025         # kcal/mol/Å²  (entropy coefficient) PLACEHOLDER
     - Literature:
     - Literature: 
     - Literature: 
@@ -144,13 +146,13 @@ DELTAS_CONF_BACKBONE        = 1.0       # kcal/mol  PLACEHOLDER
 DELTAS_DISULFIDE            = 1.0       # kcal/mol  PLACEHOLDER
 DELTAS_SALTBRIDGE           = 1.0       # kcal/mol per salt bridge PLACEHOLDER
 DELTAS_HBOND                = 1.0       # kcal/mol per backbone H-bond PLACEHOLDER
-GAMMA_HYDROPHOBIC_ENTROPY   = 0.025     # kcal/mol/Å²  (entropy coefficient)??   PLACEHOLDER
+GAMMA_HYDROPHOBIC_ENTROPY   = 0.025     # kcal/mol/Å²  (entropy coefficient) PLACEHOLDER
 
 MAX_ASA = residue_sasa_scales["Wilke"]
 
 # --- TRUNCATION MASKING PARAMETERS ---
 """
-Since pdb structures are Fab or Fv structures, the C-termini for the Heavy and Light Chains will be masked. # NEED TO CHECK ON THIS LOGIC FOR Fv structures with linkers!!!
+Since pdb structures are Fab or Fv structures, the C-termini for the Heavy and Light Chains will be masked.
 """
 N_MASK_HEAVY = 10   # Chain A (heavy, CH1 C-terminus)
 N_MASK_LIGHT = 5    # Chain B (light, CL C-terminus)
@@ -197,7 +199,6 @@ def _dist(a, b):
     return diff.norm()
 
 
-# MAY WANT TO ADD DIHEDRAL ANGLE CHECK
 def count_disulfide_bonds(struct):
     """
     Count intrachain disulfide bonds in a Fab/Fv structure.
@@ -248,7 +249,6 @@ def count_disulfide_bonds(struct):
     return dsbond_count // 2
 
 
-# MAY WANT TO ADD DIHEDRAL ANGLE CHECK
 def count_chain_disulfide_bonds(chain):
     """
     Count intrachain disulfide bonds of a single chain.
@@ -404,7 +404,7 @@ def count_chain_salt_bridges(chain):
     return chain_salt_bridge_count // 2
 
 
-def count_hydrogen_bonds(struct):       # new, double check the angle in literature
+def count_hydrogen_bonds(struct):
     """
     Count hydrogen bonds in a Fab/Fv structure using NeighborSearch.
     Criterion: donor-acceptor distance < HBOND_DIST (3.5 Å) and D-CA···A angle >= 120°.
@@ -471,7 +471,7 @@ def count_hydrogen_bonds(struct):       # new, double check the angle in literat
     return hybond_count
 
 
-def count_chain_hydrogen_bonds(chain):       # new, double check the angle in literature
+def count_chain_hydrogen_bonds(chain):
     """
     Count hydrogen bonds of a single chain using NeighborSearch.
     Criterion: donor-acceptor distance < HBOND_DIST (3.5 Å) and D-CA···A angle >= 120°.
@@ -986,7 +986,7 @@ def calc_delta_G_NU(T, delta_H_REF, delta_Cp_proxy, delta_S_REF):
     return delta_G_NU
 
 
-def calc_delta_G_NU_at_T_REF(T_REF, delta_H_REF, delta_S_REF):      #is this needed or used?
+def calc_delta_G_NU_at_T_REF(T_REF, delta_H_REF, delta_S_REF):
     """
     Gibbs-Helmholtz ΔG(T) parameterized at T_REF = 298.15 K.
     ΔG_NU(T_REF) =  ΔH_REF + ΔCp(T_REF - T_REF) - T_REF[ΔS_REF + ΔCpln(T_REF/T_REF)]
@@ -1486,9 +1486,6 @@ def run_structure_thermal_stability_secondary_structure_analysis():
                 .str.replace(" ", "", regex=False)
                 .str.strip()
             )
-
-            #df['Therapeutic'].str.lower().str.replace("_fab1", "", regex=False).str.replace("_fab2", "", regex=False).str.replace("_fab", "", regex=False).str.replace("_fv_bite", "", regex=False).str.replace("_fv1", "", regex=False).str.replace("_scfv", "", regex=False).str.replace(" ", "", regex=False).str.strip()
-            #df_master['key'] = df_master['Therapeutic'].str.lower().str.replace("_fab1", "", regex=False).str.replace("_fab2", "", regex=False).str.replace("_fab", "", regex=False).str.replace("_fv_bite", "", regex=False).str.replace("_fv1", "", regex=False).str.replace("_scfv", "", regex=False).str.replace(" ", "", regex=False).str.strip()
 
             # merge on the cleaned 'key' column and report unmatched keys
             df = pd.merge(df, df_master[['key', 'CH1 Isotype', 'VD LC']], on='key', how='left', indicator=True)
