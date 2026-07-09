@@ -14,9 +14,7 @@ Phase 4: Deploy Streamlit app for developability and biophysical risk profiling
 
 #### Phase 1
 
-Multispecific Antibodies Sequence Database
-
-A collection of therapeutic multispecific and monospecific antibody sequences in FASTA format.
+Multispecific Antibodies Sequence Database - A collection of therapeutic multispecific and monospecific antibody sequences in FASTA format.
 
 #### Data Source
 Antibody sequences obtained from [Thera-SAbDab](https://opig.stats.ox.ac.uk/webapps/sabdab-sabpred/therasabdab/search/)
@@ -28,13 +26,13 @@ Antibody sequences obtained from [Thera-SAbDab](https://opig.stats.ox.ac.uk/weba
 
 #### Phase 2
 
-- Hydrophobicity, Aggregation, Charge Module
+##### Hydrophobicity, Aggregation, Charge Module
 
-- Thermal Stability and Secondary Structure Module
+##### Thermal Stability and Secondary Structure Module
 
-- Hotspots and PTM Susceptibility Module
+##### Hotspots and PTM Susceptibility Module
 
-- Format-Specific Attributes Module
+##### Format-Specific Attributes Module
 
 #### Phase 3 - In Progress
 
