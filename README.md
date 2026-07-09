@@ -26,13 +26,13 @@ Antibody sequences obtained from [Thera-SAbDab](https://opig.stats.ox.ac.uk/weba
 
 #### Phase 2
 
-##### Hydrophobicity, Aggregation, Charge Module
+- Hydrophobicity, Aggregation, Charge Module
 
-##### Thermal Stability and Secondary Structure Module
+- Thermal Stability and Secondary Structure Module
 
-##### Hotspots and PTM Susceptibility Module
+- Hotspots and PTM Susceptibility Module
 
-##### Format-Specific Attributes Module
+- Format-Specific Attributes Module
 
 #### Phase 3 - In Progress
 
