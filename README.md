@@ -2,7 +2,7 @@
 
 This GitHub repository presents an end-to-end pipeline for multispecific antibody prediction using ColabFold, extracting 3D protein features, and engineering datasets for machine learning models to assess developability and biophysical risk.
 
-Project Roadmap
+# Project Roadmap
 Phase 1: Collect antibody FASTA sequences and organize different formats
 
 Phase 2: Fold Fab and Fv structures with ColabFold and compute all four structure-
@@ -12,13 +12,13 @@ Phase 3: Execute ML model development and validation
 
 Phase 4: Deploy Streamlit app for developability and biophysical risk profiling
 
-Phase 1
+###Phase 1
 
 Multispecific Antibodies Sequence Database
 
 A collection of therapeutic multispecific and monospecific antibody sequences in FASTA format.
 
-Data Source
+##Data Source
 Antibody sequences obtained from [Thera-SAbDab](https://opig.stats.ox.ac.uk/webapps/sabdab-sabpred/therasabdab/search/)
 
 **References:**
