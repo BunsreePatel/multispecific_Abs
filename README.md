@@ -15,10 +15,10 @@ Phase 4: Deploy Streamlit app for developability and biophysical risk profiling
 #### Phase 1
 Multispecific Antibodies Sequence Database - A collection of therapeutic multispecific and monospecific antibody FASTA sequences. Formats include Whole mAb, Bispecific mAb, scFv, Bispecific scFv, and BiTE (Bispecific T-cell Engager).
 
-#### Data Source
+##### Data Source
 Antibody sequences obtained from [Thera-SAbDab](https://opig.stats.ox.ac.uk/webapps/sabdab-sabpred/therasabdab/search/)
 
-#### References:
+##### References:
 - Schneider, C., Raybould, M.I.J., Deane, C.M. (2022) SAbDab in the Age of Biotherapeutics: Updates including SAbDab-Nano, the Nanobody Structure Tracker. *Nucleic Acids Res.* 50(D1):D1368-D1372
 - Raybould, M.I.J., Marks, C. et al (2019) Thera-SAbDab: the Therapeutic Structural Antibody Database. *Nucleic Acids Res.* gkz827
 - Dunbar, J., Krawczyk, K. et al (2014) SAbDab: the Structural Antibody Database. *Nucleic Acids Res.* 42:D1140-D1146
