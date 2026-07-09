@@ -12,7 +12,7 @@ Phase 3: Execute ML model development and validation
 
 Phase 4: Deploy Streamlit app for developability and biophysical risk profiling
 
-### Phase 1
+#### Phase 1
 Multispecific Antibodies Sequence Database - A collection of therapeutic multispecific and monospecific antibody FASTA sequences. Formats include Whole mAb, Bispecific mAb, scFv, Bispecific scFv, and BiTE (Bispecific T-cell Engager).
 
 #### Data Source
@@ -23,27 +23,27 @@ Antibody sequences obtained from [Thera-SAbDab](https://opig.stats.ox.ac.uk/weba
 - Raybould, M.I.J., Marks, C. et al (2019) Thera-SAbDab: the Therapeutic Structural Antibody Database. *Nucleic Acids Res.* gkz827
 - Dunbar, J., Krawczyk, K. et al (2014) SAbDab: the Structural Antibody Database. *Nucleic Acids Res.* 42:D1140-D1146
 
-### Phase 2
+#### Phase 2
 Folding of antibody sequences into pdb structure files using ColabFold. Each module contains structure-based feature calculations.
 
-   **Hydrophobicity, Aggregation, Charge Module**
+   Hydrophobicity, Aggregation, Charge Module
 
-   **Thermal Stability and Secondary Structure Module**
+   Thermal Stability and Secondary Structure Module
 
-   **Hotspots and PTM Susceptibility Module**
+   Hotspots and PTM Susceptibility Module
 
-   **Format-Specific Attributes Module**
+   Format-Specific Attributes Module
 
 #### Phase 3 - In Progress
 
 #### Phase 4 - Planned
 
-### License
+#### License
 - Code: MIT License
 - Antibody Sequences: Sourced from Thera-SAbDab (publicly available data)
 
-### Disclaimer
+#### Disclaimer
 These sequences are from publicly available therapeutic antibodies as curated by Thera-SAbDab. For commercial use, please verify current patent status and regulatory information.
 
-### Statistics
+#### Statistics
 - Total antibodies: 628
