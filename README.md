@@ -40,12 +40,12 @@ Antibody sequences obtained from [Thera-SAbDab](https://opig.stats.ox.ac.uk/weba
 
 #### Phase 4 - Planned
 
-### License
+#### License
 - **Code** : MIT License
 - **Data** (antibody sequences): Sourced from Thera-SAbDab (publicly available data)
 
-### Disclaimer
+#### Disclaimer
 These sequences are from publicly available therapeutic antibodies as curated by Thera-SAbDab. For commercial use, please verify current patent status and regulatory information.
 
-### Statistics
+#### Statistics
 - Total antibodies: 628
