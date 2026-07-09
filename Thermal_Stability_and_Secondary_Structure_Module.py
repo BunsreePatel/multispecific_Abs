@@ -23,7 +23,7 @@ BASE_DIRS = [
     Path("/home/bunsree/projects/multispecific_Abs/Whole_mAb")
 ]
 
-MASTER_CSV = Path("/home/bunsree/projects/rosalind-bioinformatics/multispecific_antibodies/TheraSAbDab_SeqStruc_07Dec2025.csv")
+MASTER_CSV = Path("/home/bunsree/projects/multispecific_Abs/TheraSAbDab_SeqStruc_07Dec2025.csv")
 
 """
 THEORY: STRUCTURE-BASED THERMAL STABILITY AND SECONDARY STRUCTURE MODULE
@@ -1247,7 +1247,7 @@ def calculate_secondary_structure_features(struct, pdb_path, dssp_executable="/h
 
 # --- MAIN PIPELINE ---
 def run_structure_thermal_stability_secondary_structure_analysis():
-    MASTER_CSV = Path("/home/bunsree/projects/rosalind-bioinformatics/multispecific_antibodies/TheraSAbDab_SeqStruc_07Dec2025.csv")
+    MASTER_CSV = Path("/home/bunsree/projects/multispecific_Abs/TheraSAbDab_SeqStruc_07Dec2025.csv")
     # Read MASTER_CSV
     df_master = pd.read_csv(MASTER_CSV)
     df_master['key'] = df_master['Therapeutic'].str.lower().str.strip()

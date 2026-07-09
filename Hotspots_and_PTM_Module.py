@@ -22,7 +22,7 @@ BASE_DIRS = [
     Path("/home/bunsree/projects/multispecific_Abs/Whole_mAb")
 ]
 
-MASTER_CSV = Path("/home/bunsree/projects/rosalind-bioinformatics/multispecific_antibodies/TheraSAbDab_SeqStruc_07Dec2025.csv")
+MASTER_CSV = Path("/home/bunsree/projects/multispecific_Abs/TheraSAbDab_SeqStruc_07Dec2025.csv")
 
 """
 THEORY: STRUCTURE-BASED HOT SPOTS AND PTM SUSCEPTIBILITY MODULE

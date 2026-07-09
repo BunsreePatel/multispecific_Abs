@@ -5,8 +5,7 @@ This GitHub repository presents an end-to-end pipeline for multispecific antibod
 ### Project Roadmap
 Phase 1: Collect antibody FASTA sequences and organize different formats
 
-Phase 2: Fold Fab and Fv structures with ColabFold and compute all four structure-
-based feature engineering modules
+Phase 2: Fold Fab and Fv structures with ColabFold and compute all four structure-based feature engineering modules
 
 Phase 3: Execute ML model development and validation
 
@@ -24,7 +23,7 @@ Antibody sequences obtained from [Thera-SAbDab](https://opig.stats.ox.ac.uk/weba
 - Dunbar, J., Krawczyk, K. et al (2014) SAbDab: the Structural Antibody Database. *Nucleic Acids Res.* 42:D1140-D1146
 
 #### Phase 2
-Antibody Structure-Based Feature Engineering - Phase 2 converts antibody sequence data from Phase 1 into PDB structure files using ColabFold and extracts quantitative biophysical structure-based features.
+Antibody Structure-Based Feature Engineering - Phase 2 converts antibody sequence data from Phase 1 into PDB structure files using ColabFold and extracts quantitative biophysical features.
 
 - Hydrophobicity, Aggregation, Charge Module
 

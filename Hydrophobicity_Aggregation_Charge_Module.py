@@ -22,7 +22,7 @@ BASE_DIRS = [
 MASTER_CSV = Path("/home/bunsree/projects/multispecific_Abs/TheraSAbDab_SeqStruc_07Dec2025.csv")
 
 """
-THEORY: STRUCTURE-BASED HYDROPHOBICITY, AGGREGATION, AND CHARGE MODULE
+THEORY: STRUCTURE-BASED HYDROPHOBICITY, AGGREGATION, CHARGE MODULE
 =============================================================
  
 HYDROPHOBICITY FEATURES (3D-Dependent):
@@ -125,7 +125,7 @@ Since pdb structures are Fab or Fv structures, the C-termini for the Heavy and L
 N_MASK_HEAVY = 10   # Chain A (heavy, CH1 C-terminus)
 N_MASK_LIGHT = 5    # Chain B (light, CL C-terminus)
 
-# --- HYDROPHOBICITY, AGGREGATION, AND CHARGE HELPER FUNCTIONS ---
+# --- HYDROPHOBICITY, AGGREGATION, CHARGE HELPER FUNCTIONS ---
 def get_max_asa(resname):
     """Get max ASA for 3-letter residue code."""
 
@@ -1271,7 +1271,7 @@ def run_structure_hydrophobicity_aggregation_charge_analysis():
         if duplicate_key_count:
             print(f"WARNING: skipped {duplicate_key_count} duplicate normalized PDB file(s).")
 
-        print(f"Found {len(pdb_map)} PDB files for HYDROPHOBICITY, AGGREGATION, and CHARGE analysis.")
+        print(f"Found {len(pdb_map)} PDB files for HYDROPHOBICITY, AGGREGATION, CHARGE analysis.")
         
         # Setup tools
         parser = PDBParser(QUIET=True)
@@ -1279,7 +1279,7 @@ def run_structure_hydrophobicity_aggregation_charge_analysis():
         failed_entries = []
         
         # Process every PDB found
-        print("--- CALCULATING STRUCTURE-BASED HYDROPHOBICITY, AGGREGATION, AND CHARGE ANALYSIS ---")
+        print("--- CALCULATING STRUCTURE-BASED HYDROPHOBICITY, AGGREGATION, CHARGE ANALYSIS ---")
         for ab_name, pdb_path in tqdm(pdb_map.items()):
             try:
                 # Load pdb structure
