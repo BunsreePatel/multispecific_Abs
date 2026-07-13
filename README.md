@@ -36,7 +36,7 @@ Fab structures required appending CH1 and CL constant regions, while Fv-based fo
 - Format-Specific Attributes Module
 
 ##### References: 
-- Mirdita M, Schütze K, Moriwaki Y, Heo L, Ovchinnikov S, Steinegger M. ColabFold: Making protein folding accessible to all. Nature Methods, 2022
+- Mirdita M, Schütze K, Moriwaki Y, Heo L, Ovchinnikov S, Steinegger M. ColabFold: Making protein folding accessible to all. *Nature Methods*, 2022
 
 #### Phase 3 - In Progress
 
