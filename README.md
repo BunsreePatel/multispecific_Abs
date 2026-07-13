@@ -27,6 +27,8 @@ Antibody Structure-Based Feature Engineering - Phase 2 converts antibody sequenc
 
 Fab structures required appending CH1 and CL constant regions, while Fv-based formats involved mapping format-specific linker sequences. All PDBs were folded using Google AlphaFold2.ipynb (see [`colabfold/`](./colabfold/)) with AMBER relaxation enabled.
 
+**ColabFold:** Mirdita M, Schütze K, Moriwaki Y, Heo L, Ovchinnikov S, Steinegger M. ColabFold: Making protein folding accessible to all. Nature Methods, 2022
+
 - Hydrophobicity, Aggregation, Charge Module
 
 - Thermal Stability and Secondary Structure Module
