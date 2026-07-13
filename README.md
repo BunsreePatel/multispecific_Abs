@@ -25,7 +25,7 @@ Antibody sequences obtained from [Thera-SAbDab](https://opig.stats.ox.ac.uk/weba
 #### Phase 2
 Antibody Structure-Based Feature Engineering - Phase 2 converts antibody sequence data from Phase 1 into PDB structure files using ColabFold and extracts quantitative biophysical features. 
 
-Fab structures required appending CH1 and CL constant regions, while Fv-based formats involved mapping format-specific linker sequences. All PDBs were folded using Google AlphaFold2.ipynb (see `colabfold/`) with AMBER relaxation enabled.
+Fab structures required appending CH1 and CL constant regions, while Fv-based formats involved mapping format-specific linker sequences. All PDBs were folded using Google AlphaFold2.ipynb (see [`colabfold/`](./colabfold/)) with AMBER relaxation enabled.
 
 - Hydrophobicity, Aggregation, Charge Module
 
