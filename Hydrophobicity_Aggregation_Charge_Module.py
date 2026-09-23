@@ -74,6 +74,7 @@ HYDROPHOBICITY, AGGREGATION, CHARGE FEATURES (3D-Dependent):
     - Identifies spatially clustered aromatic residues (PHE, TYR, TRP) on the protein surface via proximity-based clustering; dense aromatic surface exposure is associated with aggregation risk.
     - Outputs: number of patches, largest patch size, largest patch SASA, max/mean patch intensity, total patch SASA, top patch burden
     - Literature: Burley, S. K., & Petsko, G. A. (1985). Aromatic-aromatic interaction: A mechanism of protein structure stabilization. Science, 229(4708), 23-28.
+    - Literature: Jain, T., Boland, T., Lilov, A., et al. (2017). Prediction of delayed retention of antibodies in hydrophobic interaction chromatography from sequence using machine learning. Bioinformatics, 33(23), 3758-3766.
     
 9. NET CHARGE, DIPOLE MOMENT, COMPLEMENTARY CHARGE PATCHES
 
@@ -115,6 +116,13 @@ WW_SCALE = {
     "TRP": 1.85,
     "TYR": 0.94,
     "VAL": -0.07,
+}
+
+# JAIN AROMATIC HYDROPHOBICITY SCALE
+AROMATIC_SCALE = {
+    "TRP": 3.132,
+    "PHE": 2.764,
+    "TYR": 2.059,
 }
 
 # --- TRUNCATION MASKING PARAMETERS ---
@@ -458,16 +466,12 @@ def compute_hydrophobic_patch_metrics(hydrophobic_patches, hydrophobic_patch_can
         patch_size = len(patch)
         patch_sasa = sum(hydrophobic_patch_candidates[i]["abs_sasa"] for i in patch)
 
-        if patch_sasa > 0:
-            weighted = sum(
-                hydrophobic_patch_candidates[i]["ww"] * hydrophobic_patch_candidates[i]["abs_sasa"]
-                for i in patch
-            )
-            patch_intensity = weighted / patch_sasa
-        else:
-            patch_intensity = 0.0
-
-        patch_burden = patch_intensity * patch_sasa
+        weighted = sum(
+            hydrophobic_patch_candidates[i]["ww"] * hydrophobic_patch_candidates[i]["abs_sasa"]
+            for i in patch
+        )
+        patch_burden = weighted
+        patch_intensity = weighted / patch_sasa if patch_sasa > 0 else 0.0
 
         hydrophobic_patch_metrics.append({
             "patch_size": patch_size,
@@ -485,25 +489,21 @@ def compute_chain_hydrophobic_patch_metrics(chain_hydrophobic_patches, chain_hyd
     for patch in chain_hydrophobic_patches:
         patch_size = len(patch)
         patch_sasa = sum(chain_hydrophobic_patch_candidates[i]["abs_sasa"] for i in patch)
-
-        if patch_sasa > 0:
-            weighted = sum(
-                chain_hydrophobic_patch_candidates[i]["ww"] * chain_hydrophobic_patch_candidates[i]["abs_sasa"]
-                for i in patch
-            )
-            patch_intensity = weighted / patch_sasa
-        else:
-            patch_intensity = 0.0
-
-        patch_burden = patch_intensity * patch_sasa
-
+    
+        weighted = sum(
+            chain_hydrophobic_patch_candidates[i]["ww"] * chain_hydrophobic_patch_candidates[i]["abs_sasa"]
+            for i in patch
+        )
+        patch_burden = weighted
+        patch_intensity = weighted / patch_sasa if patch_sasa > 0 else 0.0
+    
         chain_hydrophobic_patch_metrics.append({
             "patch_size": patch_size,
             "patch_sasa": patch_sasa,
             "patch_intensity": patch_intensity,
             "patch_burden": patch_burden,
         })
-
+    
     return chain_hydrophobic_patch_metrics
 
 
@@ -678,6 +678,7 @@ def build_aromatic_patch_candidates(struct):
                 "icode": str(res.id[2]).strip() if res.id[2] is not None else "",
                 "coord": anchor,
                 "abs_sasa": abs_sasa,
+                "aw": AROMATIC_SCALE.get(resname, 0.0)
                 })
 
     return aromatic_patch_candidates
@@ -720,6 +721,7 @@ def build_chain_aromatic_patch_candidates(chain):
             "icode": str(res.id[2]).strip() if res.id[2] is not None else "",
             "coord": anchor,
             "abs_sasa": abs_sasa,
+            "aw": AROMATIC_SCALE.get(resname, 0.0)
             })
 
     return chain_aromatic_patch_candidates
@@ -811,15 +813,17 @@ def enumerate_chain_aromatic_patches(chain_aromatic_patch_graph):
 
 def compute_aromatic_patch_metrics(aromatic_patches, aromatic_patch_candidates):
     aromatic_patch_metrics = []
-    
+
     for patch in aromatic_patches:
         patch_size = len(patch)
         patch_sasa = sum(aromatic_patch_candidates[i]["abs_sasa"] for i in patch)
-        
-        #Check on this logic since there is no ww scale like for hydrophobic patches!!!
-        patch_intensity = patch_sasa / patch_size if patch_size > 0 else 0.0
-                
-        patch_burden = patch_intensity * patch_sasa
+
+        weighted = sum(
+            aromatic_patch_candidates[i]["aw"] * aromatic_patch_candidates[i]["abs_sasa"]
+            for i in patch
+        )
+        patch_burden = weighted
+        patch_intensity = weighted / patch_sasa if patch_sasa > 0 else 0.0
 
         aromatic_patch_metrics.append({
             "patch_size": patch_size,
@@ -837,11 +841,13 @@ def compute_chain_aromatic_patch_metrics(chain_aromatic_patches, chain_aromatic_
     for patch in chain_aromatic_patches:
         patch_size = len(patch)
         patch_sasa = sum(chain_aromatic_patch_candidates[i]["abs_sasa"] for i in patch)
-        
-        #Check on this logic since there is no ww scale like for hydrophobic patches!!!
-        patch_intensity = patch_sasa / patch_size if patch_size > 0 else 0.0
-                
-        patch_burden = patch_intensity * patch_sasa
+
+        weighted = sum(
+            chain_aromatic_patch_candidates[i]["aw"] * chain_aromatic_patch_candidates[i]["abs_sasa"]
+            for i in patch
+        )
+        patch_burden = weighted
+        patch_intensity = weighted / patch_sasa if patch_sasa > 0 else 0.0
 
         chain_aromatic_patch_metrics.append({
             "patch_size": patch_size,
@@ -853,7 +859,6 @@ def compute_chain_aromatic_patch_metrics(chain_aromatic_patches, chain_aromatic_
     return chain_aromatic_patch_metrics
 
 
-#CHECK ON THE FILTER THRESHOLD FOR AROMATIC PATCHES!!
 def filter_valid_aromatic_patches(aromatic_patch_metrics):
     valid_aromatic_patches = [
         p for p in aromatic_patch_metrics
@@ -862,7 +867,6 @@ def filter_valid_aromatic_patches(aromatic_patch_metrics):
     return valid_aromatic_patches
 
 
-#CHECK ON THE FILTER THRESHOLD FOR AROMATIC PATCHES!!
 def filter_valid_chain_aromatic_patches(chain_aromatic_patch_metrics):
     valid_chain_aromatic_patches = [
         p for p in chain_aromatic_patch_metrics
