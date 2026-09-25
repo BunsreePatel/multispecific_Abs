@@ -6,7 +6,7 @@ import matplotlib.pyplot as plt
 
 # Load data
 
-with open(r"C:\Users\bunsr\OneDrive\Bunsree\OneDrive\Desktop\ML Practice\Bispecific_mAb\ML Practice_Structure_Based_HAC_Module_scFv.csv") as file:
+with open(r"C:\Users\bunsr\OneDrive\Bunsree\OneDrive\Desktop\ML Practice\scFv\ML Practice_Structure_Based_HAC_Module_scFv.csv") as file:
     print(file.read())
 
 df = pd.read_csv(
