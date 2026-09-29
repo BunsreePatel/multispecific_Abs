@@ -27,7 +27,6 @@ print(df.isnull().sum())
 # Feature groups
 hydrophobicity_features = [
     "Fab_Total_SASA",
-    "Fab_Total_SAP",
     "Num_Hydrophobic_Patches",
     "Largest_Hydrophobic_Patch_Size",
     "Largest_Hydrophobic_Patch_SASA",
@@ -48,22 +47,7 @@ hydrophobicity_features = [
 ]
 
 aggregation_features = [
-    "Fab_Total_SASA",
     "Fab_Total_SAP",
-    "Num_Hydrophobic_Patches",
-    "Largest_Hydrophobic_Patch_Size",
-    "Largest_Hydrophobic_Patch_SASA",
-    "Max_Hydrophobic_Patch_Intensity",
-    "Mean_Hydrophobic_Patch_Intensity",
-    "Sum_Total_Hydrophobic_Patch_SASA",
-    "Top_Hydrophobic_Patch_Burden",
-    "Num_Aromatic_Patches",
-    "Largest_Aromatic_Patch_Size",
-    "Largest_Aromatic_Patch_SASA",
-    "Max_Aromatic_Patch_Intensity",
-    "Mean_Aromatic_Patch_Intensity",
-    "Sum_Total_Aromatic_Patch_SASA",
-    "Top_Aromatic_Patch_Burden"
 ]
 
 charge_features = [

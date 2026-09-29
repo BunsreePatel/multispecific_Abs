@@ -5,23 +5,21 @@ import matplotlib.pyplot as plt
 # -------------------- Settings --------------------
 
 # Load data
-
-with open(r"C:\Users\bunsr\OneDrive\Bunsree\OneDrive\Desktop\ML Practice\scFv\ML Practice_Structure_Based_HAC_Module_scFv.csv") as file:
-    print(file.read())
-
 df = pd.read_csv(
-    r"C:\Users\bunsr\OneDrive\Bunsree\OneDrive\Desktop\ML Practice\scFv\ML Practice_Structure_Based_HAC_Module_scFv.csv"
+    r"C:\Users\meeko\OneDrive\Desktop\ML Practice\scFv\ML Practice_Structure_Based_HAC_Module_scFv.csv"
 )
-    
+
 print("Dataset shape:", df.shape)
 print("\nMissing values:")
 print(df.isnull().sum())
+
+PLOT_SIZE = (16, 12)
+PLOT_DPI = 100
 
 # -------------------- Feature groups --------------------
 
 hydrophobicity_features = [
     "Fab_Total_SASA",
-    "Fab_Total_SAP",
     "Num_Hydrophobic_Patches",
     "Largest_Hydrophobic_Patch_SASA",
     "Max_Hydrophobic_Patch_Intensity",
@@ -33,14 +31,7 @@ hydrophobicity_features = [
 ]
 
 aggregation_features = [
-    "Fab_Total_SASA",
     "Fab_Total_SAP",
-    "Num_Hydrophobic_Patches",
-    "Largest_Hydrophobic_Patch_SASA",
-    "Max_Hydrophobic_Patch_Intensity",
-    "Mean_Hydrophobic_Patch_Intensity",
-    "Top_Hydrophobic_Patch_Burden",
-    "Largest_Aromatic_Patch_SASA",
 ]
 
 charge_features = [
@@ -93,8 +84,9 @@ def validate_feature_group(df, features, group_name):
 
     # Visualize feature distributions
     X[usable_features].hist(
-        figsize=(16, 12),
-        bins=20
+        figsize=(16,16),
+        bins=20,
+        color="#040454"
     )
 
     plt.suptitle(
@@ -102,17 +94,22 @@ def validate_feature_group(df, features, group_name):
         fontsize=16
     )
 
-    plt.tight_layout()
+    plt.subplots_adjust(left=0.08, bottom=0.08, right=0.98, top=0.90,
+                        wspace=0.25, hspace=0.45)
     plt.show()
+
+    #plt.tight_layout()
+    #plt.show()
 
     # Visualize feature correlations
     correlation_matrix = X[usable_features].corr()
 
-    plt.figure(figsize=(12, 10))
+    plt.figure(figsize=PLOT_SIZE, dpi=PLOT_DPI)
+    #plt.figure(figsize=(12, 10))
 
     plt.imshow(
         correlation_matrix,
-        cmap="coolwarm",
+        cmap="RdBu_r",
         interpolation="nearest",
         aspect="auto",
         vmin=-1,
@@ -124,16 +121,18 @@ def validate_feature_group(df, features, group_name):
     plt.xticks(
         range(len(usable_features)),
         usable_features,
-        rotation=90
+        rotation=90,
+        fontsize=9,
     )
 
     plt.yticks(
         range(len(usable_features)),
-        usable_features
+        usable_features,
+        fontsize=9,
     )
 
     plt.title(f"{group_name} Feature Correlations")
-    plt.tight_layout()
+    plt.subplots_adjust(left=0.30, bottom=0.40, right=0.94, top=0.90)
     plt.show()
 
     return {
@@ -163,13 +162,11 @@ charge_results = validate_feature_group(
     "Charge"
 )
 
-# -------------------- Manual review and drop --------------------
+# -------------------- Optional manual feature drops --------------------
 
-# Review the printed correlation matrices and heatmaps above, then list which features to drop per group and filter.
-
-hydrophobicity_to_drop = []  # fill in after reviewing output
-aggregation_to_drop = []     # fill in after reviewing output
-charge_to_drop = []          # fill in after reviewing output
+hydrophobicity_to_drop = []
+aggregation_to_drop = []
+charge_to_drop = []
 
 hydrophobicity_final = [
     f for f in hydrophobicity_results["usable_features"]
