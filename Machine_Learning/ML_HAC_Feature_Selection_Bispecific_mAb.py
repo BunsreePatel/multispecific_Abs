@@ -21,13 +21,22 @@ PLOT_DPI = 100
 hydrophobicity_features = [
     "Fab_Total_SASA",
     "Num_Hydrophobic_Patches",
+    "Largest_Hydrophobic_Patch_Size",
     "Largest_Hydrophobic_Patch_SASA",
     "Max_Hydrophobic_Patch_Intensity",
     "Mean_Hydrophobic_Patch_Intensity",
     "Sum_Total_Hydrophobic_Patch_SASA",
     "Top_Hydrophobic_Patch_Burden",
     "Num_Aromatic_Patches",
+    "Largest_Aromatic_Patch_Size",
     "Largest_Aromatic_Patch_SASA",
+    "Max_Aromatic_Patch_Intensity",
+    "Mean_Aromatic_Patch_Intensity",
+    "Sum_Total_Aromatic_Patch_SASA",
+    "Top_Aromatic_Patch_Burden",
+    "Hydro_Dipole_Moment_X",
+    "Hydro_Dipole_Moment_Y",
+    "Hydro_Dipole_Moment_Z",
 ]
 
 aggregation_features = [
@@ -164,7 +173,11 @@ charge_results = validate_feature_group(
 
 # -------------------- Optional manual feature drops --------------------
 
-hydrophobicity_to_drop = []
+hydrophobicity_to_drop = [
+    "Max_Aromatic_Patch_Intensity",
+    "Mean_Aromatic_Patch_Intensity",
+    "Sum_Total_Aromatic_Patch_SASA",
+]
 aggregation_to_drop = []
 charge_to_drop = []
 
@@ -186,3 +199,40 @@ charge_final = [
 print("\nFinal Hydrophobicity features:", hydrophobicity_final)
 print("Final Aggregation features:", aggregation_final)
 print("Final Charge features:", charge_final)
+
+
+# Plot again using features remaining after manual drops
+final_feature_groups = [
+    ("Hydrophobicity", hydrophobicity_final),
+    ("Aggregation", aggregation_final),
+    ("Charge", charge_final),
+]
+
+for group_name, features in final_feature_groups:
+    print(f"\n{group_name} features after manual drop:", features)
+
+    df[features].hist(figsize=(16, 16), bins=20, color="#040454")
+    plt.suptitle(f"{group_name} Feature Distributions — After Manual Drop", fontsize=16)
+    plt.subplots_adjust(
+        left=0.08, bottom=0.08, right=0.98, top=0.90,
+        wspace=0.25, hspace=0.5
+    )
+    plt.show()
+
+    correlation_matrix = df[features].corr()
+
+    plt.figure(figsize=PLOT_SIZE, dpi=PLOT_DPI)
+    plt.imshow(
+        correlation_matrix,
+        cmap="RdBu_r",
+        interpolation="nearest",
+        aspect="auto",
+        vmin=-1,
+        vmax=1
+    )
+    plt.colorbar(label="Correlation")
+    plt.xticks(range(len(features)), features, rotation=90, fontsize=9)
+    plt.yticks(range(len(features)), features, fontsize=9)
+    plt.title(f"{group_name} Feature Correlations — After Manual Drop")
+    plt.subplots_adjust(left=0.30, bottom=0.40, right=0.94, top=0.90)
+    plt.show()
