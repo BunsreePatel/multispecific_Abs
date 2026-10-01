@@ -107,9 +107,7 @@ def validate_feature_group(df, features, group_name):
                         wspace=0.25, hspace=0.5)
     plt.show()
 
-    #plt.tight_layout()
-    #plt.show()
-
+    
     # Visualize feature correlations
     correlation_matrix = X[usable_features].corr()
 
