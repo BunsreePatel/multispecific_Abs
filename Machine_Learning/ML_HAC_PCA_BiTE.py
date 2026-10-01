@@ -5,7 +5,7 @@ from sklearn.decomposition import PCA
 
 # Load data
 df = pd.read_csv(
-    r"C:\Users\bunsr\OneDrive\Bunsree\OneDrive\Desktop\ML Practice\Bispecific_mAb\ML Practice_Structure_Based_HAC_Module_Bispecific_mAb.csv"
+    r"C:\Users\bunsr\OneDrive\Bunsree\OneDrive\Desktop\ML Practice\BiTE\ML Practice_Structure_Based_HAC_Module_BiTE.csv"
 )
 
 # Verify successful load with some randomly selected records
