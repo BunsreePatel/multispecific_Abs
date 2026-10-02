@@ -6,7 +6,7 @@ import matplotlib.pyplot as plt
 
 # Load data
 df = pd.read_csv(
-    r"C:\Users\meeko\OneDrive\Desktop\ML Practice\Whole_mAb\ML Practice_Structure_Based_HSPTM_Module_Whole_mAb.csv"
+    r"C:\Users\bunsr\OneDrive\Bunsree\OneDrive\Desktop\ML Practice\Whole_mAb\ML Practice_Structure_Based_HSPTM_Module_Whole_mAb.csv"
 )
 
 print("Dataset shape:", df.shape)
@@ -117,7 +117,7 @@ Free_CYS_features = [
     "Free_CYS7_BFactor",
     "Free_CYS7_RelSASA",
     "Free_CYS_Count",
-    "CDR_CYS_Oxidation",
+    "CDR_Free_CYS",
 ]
 
 GLN_deamidation_features = [
@@ -432,15 +432,18 @@ TRP_oxidation_results = validate_feature_group(
 
 # -------------------- Optional manual feature drops --------------------
 
-ASN_deamidation_to_drop = []
-ASP_isomerization_to_drop = []
-CYS_oxidation_to_drop = []
-Free_CYS_to_drop = []
-GLN_deamidation_to_drop = []
-HIS_oxidation_to_drop = []
-MET_oxidation_to_drop = []
-N_glycosylation_to_drop = []
-TRP_oxidation_to_drop = []
+def drop_abs_sasa_features(feature_list):
+    return [f for f in feature_list if "_AbsSASA" in f]
+
+ASN_deamidation_to_drop = drop_abs_sasa_features(ASN_deamidation_features)
+ASP_isomerization_to_drop = drop_abs_sasa_features(ASP_isomerization_features)
+CYS_oxidation_to_drop = drop_abs_sasa_features(CYS_oxidation_features)
+Free_CYS_to_drop = drop_abs_sasa_features(Free_CYS_features)
+GLN_deamidation_to_drop = drop_abs_sasa_features(GLN_deamidation_features)
+HIS_oxidation_to_drop = drop_abs_sasa_features(HIS_oxidation_features)
+MET_oxidation_to_drop = drop_abs_sasa_features(MET_oxidation_features)
+N_glycosylation_to_drop = drop_abs_sasa_features(N_glycosylation_features)
+TRP_oxidation_to_drop = drop_abs_sasa_features(TRP_oxidation_features)
 general_structure_to_drop = []
 
 ASN_deamidation_final = [
