@@ -2,6 +2,7 @@ import pandas as pd
 import matplotlib.pyplot as plt
 from sklearn.preprocessing import StandardScaler
 from sklearn.decomposition import PCA
+from sklearn.impute import SimpleImputer
 
 # Load data
 df = pd.read_csv(
@@ -259,13 +260,6 @@ TRP_oxidation_features = [
 
 # Apply the manual drops from the validation script
 manual_drops = {
-    "Hydrophobicity": {
-        "Max_Aromatic_Patch_Intensity",
-        "Mean_Aromatic_Patch_Intensity",
-        "Sum_Total_Aromatic_Patch_SASA",
-    },
-    "Aggregation": set(),
-    "Charge": set(),
 }
 
 def get_final_features(features, group_name):
@@ -279,17 +273,17 @@ def get_final_features(features, group_name):
 
     if X.isnull().any().any():
         missing_columns = X.columns[X.isnull().any()].tolist()
-        raise ValueError(
+        print(
             f"Missing values detected in {group_name}: {missing_columns}"
         )
 
     variances = X.var()
     zero_variance_features = set(variances[variances == 0].index)
-    dropped_features = manual_drops[group_name] | zero_variance_features
+    #dropped_features = manual_drops[group_name] | zero_variance_features
 
     final_features = [
         feature for feature in features
-        if feature not in dropped_features
+        #if feature not in dropped_features
     ]
 
     if not final_features:
@@ -298,8 +292,8 @@ def get_final_features(features, group_name):
     print(f"\n{group_name} zero-variance features:")
     print(sorted(zero_variance_features) if zero_variance_features else "None")
 
-    print(f"{group_name} manually dropped features:")
-    print(sorted(manual_drops[group_name]) if manual_drops[group_name] else "None")
+    #print(f"{group_name} manually dropped features:")
+    #print(sorted(manual_drops[group_name]) if manual_drops[group_name] else "None")
 
     print(f"{group_name} final features:")
     print(final_features)
@@ -323,13 +317,13 @@ Free_CYS_features = get_final_features(
     Free_CYS_features, "Free CYS"
 )
 GLN_deamidation_features= get_final_features(
-    ASN_deamidation_features, "GLN Deamidation"
+    GLN_deamidation_features, "GLN Deamidation"
 )
 HIS_oxidation_features = get_final_features(
     HIS_oxidation_features, "HIS oxidation"
 )
-CYS_oxidation_features = get_final_features(
-    CYS_oxidation_features, "CYS oxidation"
+MET_oxidation_features = get_final_features(
+    MET_oxidation_features, "MET oxidation"
 )
 N_glycosylation_features = get_final_features(
     N_glycosylation_features, "N Glycosylation"
@@ -445,9 +439,13 @@ plt.show()
 # ---------- UNSUPERVISED LEARNING ----------
 
 # ---------- General Structure ----------
+# Impute missing values in General Structure input features
+general_structure_imputer = SimpleImputer(strategy="mean")
+X_general_structure_imputed = general_structure_imputer.fit_transform(X_general_structure)
+
 # Standardize all general structure input features
 general_structure_scaler = StandardScaler()
-X_general_structure_scaled = general_structure_scaler.fit_transform(X_general_structure)
+X_general_structure_scaled = general_structure_scaler.fit_transform(X_general_structure_imputed)
 
 # Create PCA model
 general_structure_pca = PCA(n_components=1)
@@ -478,9 +476,13 @@ plt.title("Derived General Structure Score")
 plt.show()
 
 # ---------- ASN deamidation ----------
+# Impute missing values in ASN deamidation input features
+ASN_deamidation_imputer = SimpleImputer(strategy="mean")
+X_ASN_deamidation_imputed = ASN_deamidation_imputer.fit_transform(X_ASN_deamidation)
+
 # Standardize all ASN deamidation input features
 ASN_deamidation_scaler = StandardScaler()
-X_ASN_deamidation_scaled = ASN_deamidation_scaler.fit_transform(X_ASN_deamidation)
+X_ASN_deamidation_scaled = ASN_deamidation_scaler.fit_transform(X_ASN_deamidation_imputed)
 
 # Create PCA model
 ASN_deamidation_pca = PCA(n_components=1)
@@ -511,9 +513,13 @@ plt.title("Derived ASN deamidation Score")
 plt.show()
 
 # ---------- ASP isomerization ----------
+# Impute missing values in ASP isomerization input features
+ASP_isomerization_imputer = SimpleImputer(strategy="mean")
+X_ASP_isomerization_imputed = ASP_isomerization_imputer.fit_transform(X_ASP_isomerization)
+
 # Standardize all ASP isomerization input features
 ASP_isomerization_scaler = StandardScaler()
-X_ASP_isomerization_scaled = ASP_isomerization_scaler.fit_transform(X_ASP_isomerization)
+X_ASP_isomerization_scaled = ASP_isomerization_scaler.fit_transform(X_ASP_isomerization_imputed)
 
 # Create PCA model
 ASP_isomerization_pca = PCA(n_components=1)
@@ -544,9 +550,13 @@ plt.title("Derived ASP isomerization Score")
 plt.show()
 
 # ---------- CYS oxidation ----------
+# Impute missing values in CYS oxidation input features
+CYS_oxidation_imputer = SimpleImputer(strategy="mean")
+X_CYS_oxidation_imputed = CYS_oxidation_imputer.fit_transform(X_CYS_oxidation)
+
 # Standardize all CYS oxidation input features
 CYS_oxidation_scaler = StandardScaler()
-X_CYS_oxidation_scaled = CYS_oxidation_scaler.fit_transform(X_CYS_oxidation)
+X_CYS_oxidation_scaled = CYS_oxidation_scaler.fit_transform(X_CYS_oxidation_imputed)
 
 # Create PCA model
 CYS_oxidation_pca = PCA(n_components=1)
@@ -577,9 +587,13 @@ plt.title("Derived CYS oxidation Score")
 plt.show()
 
 # ---------- Free CYS ----------
+# Impute missing values in Free CYS input features
+Free_CYS_imputer = SimpleImputer(strategy="mean")
+X_Free_CYS_imputed = Free_CYS_imputer.fit_transform(X_Free_CYS)
+
 # Standardize all Free CYS input features
 Free_CYS_scaler = StandardScaler()
-X_Free_CYS_scaled = Free_CYS_scaler.fit_transform(X_Free_CYS)
+X_Free_CYS_scaled = Free_CYS_scaler.fit_transform(X_Free_CYS_imputed)
 
 # Create PCA model
 Free_CYS_pca = PCA(n_components=1)
@@ -610,9 +624,13 @@ plt.title("Derived Free CYS Score")
 plt.show()
 
 # ---------- GLN deamidation ----------
+# Impute missing values in GLN deamidation input features
+GLN_deamidation_imputer = SimpleImputer(strategy="mean")
+X_GLN_deamidation_imputed = GLN_deamidation_imputer.fit_transform(X_GLN_deamidation)
+
 # Standardize all GLN deamidation input features
 GLN_deamidation_scaler = StandardScaler()
-X_GLN_deamidation_scaled = GLN_deamidation_scaler.fit_transform(X_GLN_deamidation)
+X_GLN_deamidation_scaled = GLN_deamidation_scaler.fit_transform(X_GLN_deamidation_imputed)
 
 # Create PCA model
 GLN_deamidation_pca = PCA(n_components=1)
@@ -643,9 +661,13 @@ plt.title("Derived GLN deamidation Score")
 plt.show()
 
 # ---------- HIS oxidation ----------
+# Impute missing values in HIS oxidation input features
+HIS_oxidation_imputer = SimpleImputer(strategy="mean")
+X_HIS_oxidation_imputed = HIS_oxidation_imputer.fit_transform(X_HIS_oxidation)
+
 # Standardize all HIS oxidation input features
 HIS_oxidation_scaler = StandardScaler()
-X_HIS_oxidation_scaled = HIS_oxidation_scaler.fit_transform(X_HIS_oxidation)
+X_HIS_oxidation_scaled = HIS_oxidation_scaler.fit_transform(X_HIS_oxidation_imputed)
 
 # Create PCA model
 HIS_oxidation_pca = PCA(n_components=1)
@@ -676,9 +698,13 @@ plt.title("Derived HIS oxidation Score")
 plt.show()
 
 # ---------- MET oxidation ----------
+# Impute missing values in MET oxidation input features
+MET_oxidation_imputer = SimpleImputer(strategy="mean")
+X_MET_oxidation_imputed = MET_oxidation_imputer.fit_transform(X_MET_oxidation)
+
 # Standardize all MET oxidation input features
 MET_oxidation_scaler = StandardScaler()
-X_MET_oxidation_scaled = MET_oxidation_scaler.fit_transform(X_MET_oxidation)
+X_MET_oxidation_scaled = MET_oxidation_scaler.fit_transform(X_MET_oxidation_imputed)
 
 # Create PCA model
 MET_oxidation_pca = PCA(n_components=1)
@@ -709,9 +735,13 @@ plt.title("Derived MET oxidation Score")
 plt.show()
 
 # ---------- N-glycosylation ----------
+# Impute missing values in N-glycosylation input features
+N_glycosylation_imputer = SimpleImputer(strategy="mean")
+X_N_glycosylation_imputed = N_glycosylation_imputer.fit_transform(X_N_glycosylation)
+
 # Standardize all N-glycosylation input features
 N_glycosylation_scaler = StandardScaler()
-X_N_glycosylation_scaled = N_glycosylation_scaler.fit_transform(X_N_glycosylation)
+X_N_glycosylation_scaled = N_glycosylation_scaler.fit_transform(X_N_glycosylation_imputed)
 
 # Create PCA model
 N_glycosylation_pca = PCA(n_components=1)
@@ -742,9 +772,13 @@ plt.title("Derived N-glycosylation Score")
 plt.show()
 
 # ---------- TRP oxidation ----------
+# Impute missing values in TRP oxidation input features
+TRP_oxidation_imputer = SimpleImputer(strategy="mean")
+X_TRP_oxidation_imputed = TRP_oxidation_imputer.fit_transform(X_TRP_oxidation)
+
 # Standardize all TRP oxidation input features
 TRP_oxidation_scaler = StandardScaler()
-X_TRP_oxidation_scaled = TRP_oxidation_scaler.fit_transform(X_TRP_oxidation)
+X_TRP_oxidation_scaled = TRP_oxidation_scaler.fit_transform(X_TRP_oxidation_imputed)
 
 # Create PCA model
 TRP_oxidation_pca = PCA(n_components=1)
